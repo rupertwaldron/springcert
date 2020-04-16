@@ -25,7 +25,7 @@ public class SpringController {
     @RequestMapping
     @ResponseBody
     public String index() {
-        return "<pre>" +
+        return "<h1>This is the spring cert test</h1><pre>" +
                 springBean1 + " - Singleton\n" +
                 springBean2 + " - Prototype\n" +
                 springBean3 + " - Request Scope\n" +
