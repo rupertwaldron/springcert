@@ -1,0 +1,6 @@
+---
+applications:
+  - name: springcert
+    instances: 1
+    memory: 800m
+    path: build/libs/springcert-0.0.1-SNAPSHOT.jar
