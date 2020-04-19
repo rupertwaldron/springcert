@@ -5,3 +5,6 @@ applications:
     memory: 800m
     random-route: true
     path: build/libs/springcert-0.0.1-SNAPSHOT.jar
+    buildpack: https://github.com/cloudfoundry/java-buildpack.git#v4.16
+    env:
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 11.+}}'
