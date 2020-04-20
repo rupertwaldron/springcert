@@ -17,7 +17,11 @@ public class SpringController {
     @ResponseBody
     public String firstPage() {
         StringBuilder output = new StringBuilder("<h1>This is the credential list</h1><pre>");
-        credentialService.getAllCredentials().forEach(output::append);
+
+        credentialService.getAllCredentials().stream()
+                .map(credential -> credential + "\n")
+                .forEach(output::append);
+
         output.append("</pre>");
         return output.toString();
     }
