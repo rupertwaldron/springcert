@@ -3,11 +3,11 @@ package com.ruppyrup.springcert.controller;
 import com.ruppyrup.springcert.service.CredentialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-
 public class SpringController {
 
     @Autowired
@@ -24,5 +24,11 @@ public class SpringController {
 
         output.append("</pre>");
         return output.toString();
+    }
+
+    @GetMapping("/credentials/{id}")
+    @ResponseBody
+    public String findCredential(@PathVariable String id) {
+        return credentialService.getCredential(id).toString();
     }
 }

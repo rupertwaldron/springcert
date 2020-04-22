@@ -6,6 +6,16 @@ public class Credential {
     private String login;
     private String password;
 
+    public Credential() {
+    }
+
+    public Credential(String credentialId, String url, String login, String password) {
+        this.credentialId = credentialId;
+        this.url = url;
+        this.login = login;
+        this.password = password;
+    }
+
     public void setCredentialId(String credentialId) {
         this.credentialId = credentialId;
     }

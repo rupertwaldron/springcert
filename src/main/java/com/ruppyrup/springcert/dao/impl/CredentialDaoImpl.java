@@ -40,4 +40,31 @@ public class CredentialDaoImpl extends JdbcDaoSupport implements CredentialDao {
 
         return result;
     }
+
+    @Override
+    public Credential getCredential(String credentialId) {
+        String sql = "SELECT * FROM credential where credentialId='" + credentialId + "'";
+        Map<String, Object> row = getJdbcTemplate().queryForMap(sql);
+        Credential credential = new Credential();
+        credential.setCredentialId((String) row.get("credentialId"));
+        credential.setUrl((String) row.get("url"));
+        credential.setLogin((String) row.get("login"));
+        credential.setPassword((String) row.get("password"));
+        return credential;
+    }
+
+    @Override
+    public boolean create(Credential credential) {
+        return false;
+    }
+
+    @Override
+    public boolean delete(Credential credential) {
+        return false;
+    }
+
+    @Override
+    public boolean update(Credential credential) {
+        return false;
+    }
 }

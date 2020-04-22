@@ -18,4 +18,11 @@ public class CredentialServiceImpl implements CredentialService {
     public List<Credential> getAllCredentials() {
         return credentialDao.getAllCredentials();
     }
+
+    @Override
+    public Credential getCredential(String credentialId) {
+        return credentialDao.getCredential(credentialId);
+    }
+
+
 }
