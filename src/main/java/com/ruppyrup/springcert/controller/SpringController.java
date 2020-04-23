@@ -1,11 +1,9 @@
 package com.ruppyrup.springcert.controller;
 
+import com.ruppyrup.springcert.model.Credential;
 import com.ruppyrup.springcert.service.CredentialService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class SpringController {
@@ -19,7 +17,6 @@ public class SpringController {
         StringBuilder output = new StringBuilder("<h1>This is the credential list</h1><pre>");
 
         credentialService.getAllCredentials().stream()
-                .map(credential -> credential + "\n")
                 .forEach(output::append);
 
         output.append("</pre>");
@@ -31,4 +28,12 @@ public class SpringController {
     public String findCredential(@PathVariable String id) {
         return credentialService.getCredential(id).toString();
     }
+
+
+    @PostMapping("/credentials")
+    @ResponseBody
+    public boolean createCredential(@RequestBody Credential credential) {
+        return credentialService.createCredential(credential);
+    }
+
 }
