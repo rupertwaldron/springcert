@@ -1,22 +1,30 @@
 package com.ruppyrup.springcert.dao.impl;
 
 import com.ruppyrup.springcert.dao.CredentialDao;
+import com.ruppyrup.springcert.dao.CredentialRowMapper;
 import com.ruppyrup.springcert.model.Credential;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class CredentialDaoImpl extends JdbcDaoSupport implements CredentialDao {
 
     @Autowired
-    DataSource dataSource;
+    private DataSource dataSource;
+
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    //@Value(${})
+
 
     @PostConstruct
     private void initialize() {
@@ -25,37 +33,26 @@ public class CredentialDaoImpl extends JdbcDaoSupport implements CredentialDao {
 
     @Override
     public List<Credential> getAllCredentials() {
-        String sql = "SELECT * FROM credential";
-        List<Map<String, Object>> rows = getJdbcTemplate().queryForList(sql);
-        List<Credential> result = new ArrayList<>();
-
-        for (Map<String, Object> row : rows) {
-            Credential credential = new Credential();
-            credential.setCredentialId((String) row.get("credentialId"));
-            credential.setUrl((String) row.get("url"));
-            credential.setLogin((String) row.get("login"));
-            credential.setPassword((String) row.get("password"));
-            result.add(credential);
-        }
-
-        return result;
+        String sql = "SELECT * FROM credentials";
+        return getJdbcTemplate().query(sql, new CredentialRowMapper());
     }
 
     @Override
-    public Credential getCredential(String credentialId) {
-        String sql = "SELECT * FROM credential where credentialId='" + credentialId + "'";
-        Map<String, Object> row = getJdbcTemplate().queryForMap(sql);
-        Credential credential = new Credential();
-        credential.setCredentialId((String) row.get("credentialId"));
-        credential.setUrl((String) row.get("url"));
-        credential.setLogin((String) row.get("login"));
-        credential.setPassword((String) row.get("password"));
+    public List<Credential> getCredential(String credentialId) {
+        String sql = "SELECT * FROM credentials where credentialId='" + credentialId + "'";
+        return getJdbcTemplate().query(sql, new CredentialRowMapper());
+    }
+
+    @Override
+    public Credential create(Credential credential) {
+        String sql = "INSERT INTO credentials(credentialId, url, login, password) VALUES(:credentialId, :url, :login, :password)";
+        SqlParameterSource parameterSource = new MapSqlParameterSource()
+                .addValue("credentialId", credential.getCredentialId())
+                .addValue("url", credential.getUrl())
+                .addValue("login", credential.getLogin())
+                .addValue("password", credential.getPassword());
+        namedParameterJdbcTemplate.update(sql, parameterSource);
         return credential;
-    }
-
-    @Override
-    public boolean create(Credential credential) {
-        return false;
     }
 
     @Override

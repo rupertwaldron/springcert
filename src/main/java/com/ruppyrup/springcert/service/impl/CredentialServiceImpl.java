@@ -20,7 +20,7 @@ public class CredentialServiceImpl implements CredentialService {
     }
 
     @Override
-    public Credential getCredential(String credentialId) {
+    public List<Credential> getCredential(String credentialId) {
         return credentialDao.getCredential(credentialId);
     }
 

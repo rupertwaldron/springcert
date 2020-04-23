@@ -6,10 +6,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@Sql({"/test-schema-mysql.sql"})
 class CredentialServiceImplTest {
 
     private Credential credential1;
@@ -26,14 +28,13 @@ class CredentialServiceImplTest {
         credential3 = new Credential("John Lewis", "www.johnlewis.com", "rupert.waldron@yahoo.co.uk", "polly");
     }
 
-
     @Test
     void getAllCredentials() {
-        assertThat(credentialService.getAllCredentials()).hasSize(3);
+        assertThat(credentialService.getAllCredentials()).containsExactlyInAnyOrder(credential3, credential2, credential1);
     }
 
     @Test
     void getCredential() {
-        assertThat(credentialService.getCredential("Amazon")).isEqualToComparingFieldByField(credential1);
+        assertThat(credentialService.getCredential("Amazon")).containsExactly(credential1);
     }
 }
