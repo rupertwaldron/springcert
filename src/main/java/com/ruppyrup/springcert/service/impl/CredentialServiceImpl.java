@@ -25,7 +25,7 @@ public class CredentialServiceImpl implements CredentialService {
     }
 
     @Override
-    public boolean createCredential(Credential credential) {
+    public Credential createCredential(Credential credential) {
         return credentialDao.create(credential);
     }
 

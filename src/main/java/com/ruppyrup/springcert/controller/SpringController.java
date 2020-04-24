@@ -5,6 +5,8 @@ import com.ruppyrup.springcert.service.CredentialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class SpringController {
 
@@ -13,26 +15,20 @@ public class SpringController {
 
     @GetMapping("/credentials")
     @ResponseBody
-    public String firstPage() {
-        StringBuilder output = new StringBuilder("<h1>This is the credential list</h1><pre>");
-
-        credentialService.getAllCredentials().stream()
-                .forEach(output::append);
-
-        output.append("</pre>");
-        return output.toString();
+    public List<Credential> firstPage() {
+        return credentialService.getAllCredentials();
     }
 
     @GetMapping("/credentials/{id}")
     @ResponseBody
-    public String findCredential(@PathVariable String id) {
-        return credentialService.getCredential(id).toString();
+    public List<Credential> findCredential(@PathVariable String id) {
+        return credentialService.getCredential(id);
     }
 
 
     @PostMapping("/credentials")
     @ResponseBody
-    public boolean createCredential(@RequestBody Credential credential) {
+    public Credential createCredential(@RequestBody Credential credential) {
         return credentialService.createCredential(credential);
     }
 

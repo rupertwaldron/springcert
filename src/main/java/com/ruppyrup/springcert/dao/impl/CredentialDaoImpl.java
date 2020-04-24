@@ -46,9 +46,7 @@ public class CredentialDaoImpl extends JdbcDaoSupport implements CredentialDao {
     }
 
     @Override
-    public boolean create(Credential credential) {
-        if (!getCredential(credential.getCredentialId()).isEmpty()) return false;
-
+    public Credential create(Credential credential) {
         String sql = "INSERT INTO " + dbname + "(credentialId, url, login, password) VALUES(:credentialId, :url, :login, :password)";
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue("credentialId", credential.getCredentialId())
@@ -56,7 +54,7 @@ public class CredentialDaoImpl extends JdbcDaoSupport implements CredentialDao {
                 .addValue("login", credential.getLogin())
                 .addValue("password", credential.getPassword());
         namedParameterJdbcTemplate.update(sql, parameterSource);
-        return true;
+        return credential;
     }
 
     @Override
@@ -68,4 +66,6 @@ public class CredentialDaoImpl extends JdbcDaoSupport implements CredentialDao {
     public boolean update(Credential credential) {
         return false;
     }
+
+    //todo need to add a clean to drop the table
 }

@@ -7,5 +7,5 @@ import java.util.List;
 public interface CredentialService {
     List<Credential> getAllCredentials();
     List<Credential> getCredential(String credentialId);
-    boolean createCredential(Credential credentialId);
+    Credential createCredential(Credential credentialId);
 }

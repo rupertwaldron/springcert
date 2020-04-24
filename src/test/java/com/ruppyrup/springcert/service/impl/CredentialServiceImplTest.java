@@ -45,9 +45,9 @@ class CredentialServiceImplTest {
     @Test
     void createCredential() {
         //given
-        boolean isCreated = credentialService.createCredential(credential4);
+        Credential isCreated = credentialService.createCredential(credential4);
+
         //then
-        assertThat(isCreated).isTrue();
         assertThat(credentialService.getCredential("Tops tiles")).containsExactly(credential4);
     }
 }
