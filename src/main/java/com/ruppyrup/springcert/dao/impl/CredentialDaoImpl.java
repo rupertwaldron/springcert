@@ -40,13 +40,23 @@ public class CredentialDaoImpl extends JdbcDaoSupport implements CredentialDao {
     }
 
     @Override
-    public List<Credential> getCredential(String credentialId) {
+    public Credential getCredential(String credentialId) {
         String sql = "SELECT * FROM " + dbname + " where credentialId='" + credentialId + "'";
-        return getJdbcTemplate().query(sql, new CredentialRowMapper());
+
+        List<Credential> credentials = getJdbcTemplate().query(sql, new CredentialRowMapper());
+
+        if (credentials.isEmpty()) return null;
+
+        return credentials.get(0);
     }
 
     @Override
     public Credential create(Credential credential) {
+
+        if (getCredential(credential.getCredentialId()) != null) {
+            return new Credential(credential.getCredentialId() + " Already exists");
+        }
+
         String sql = "INSERT INTO " + dbname + "(credentialId, url, login, password) VALUES(:credentialId, :url, :login, :password)";
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue("credentialId", credential.getCredentialId())
@@ -58,13 +68,33 @@ public class CredentialDaoImpl extends JdbcDaoSupport implements CredentialDao {
     }
 
     @Override
-    public boolean delete(Credential credential) {
-        return false;
+    public Credential delete(String credentialId) {
+        Credential credentialToDelete = getCredential(credentialId);
+
+        if (credentialToDelete == null) {
+            return new Credential(credentialId + " Does not exist");
+        }
+
+
+        String sql = "DELETE FROM " + dbname + " WHERE credentialId=?";
+
+        int rowsAffected = getJdbcTemplate().update(sql, credentialId);
+
+        if (rowsAffected != 1) return new Credential(credentialId + " More or Less than one record altered");
+
+        return credentialToDelete;
     }
 
     @Override
-    public boolean update(Credential credential) {
-        return false;
+    public Credential update(Credential credential) {
+        if (getCredential(credential.getCredentialId()) == null) {
+            return new Credential(credential.getCredentialId() + " Does not exist");
+        }
+
+        String sql = "UPDATE " + dbname + " SET url = ?, login = ?, password = ? WHERE credentialId= ?";
+        getJdbcTemplate().update(sql, credential.getUrl(), credential.getLogin(), credential.getPassword(), credential.getCredentialId());
+        return credential;
+
     }
 
     //todo need to add a clean to drop the table

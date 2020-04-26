@@ -6,8 +6,12 @@ import java.util.List;
 
 public interface CredentialDao {
     List<Credential> getAllCredentials();
-    List<Credential> getCredential(String credentialId);
+
+    Credential getCredential(String credentialId);
+
     Credential create(Credential credential);
-    boolean delete(Credential credential);
-    boolean update(Credential credential);
+
+    Credential delete(String credentialId);
+
+    Credential update(Credential credential);
 }

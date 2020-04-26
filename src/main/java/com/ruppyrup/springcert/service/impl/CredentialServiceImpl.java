@@ -20,13 +20,23 @@ public class CredentialServiceImpl implements CredentialService {
     }
 
     @Override
-    public List<Credential> getCredential(String credentialId) {
+    public Credential getCredential(String credentialId) {
         return credentialDao.getCredential(credentialId);
     }
 
     @Override
     public Credential createCredential(Credential credential) {
         return credentialDao.create(credential);
+    }
+
+    @Override
+    public Credential updateCredential(Credential credential) {
+        return credentialDao.update(credential);
+    }
+
+    @Override
+    public Credential deleteCredential(String credentialId) {
+        return credentialDao.delete(credentialId);
     }
 
 
