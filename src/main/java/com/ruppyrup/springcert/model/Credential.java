@@ -21,4 +21,14 @@ public class Credential {
         this.login = hiddenParam;
         this.password = hiddenParam;
     }
+
+    @Override
+    public String toString() {
+        return "Credential{" +
+                "credentialId='" + credentialId + '\'' +
+                ", url='" + url + '\'' +
+                ", login='" + hiddenParam + '\'' +
+                ", password='" + hiddenParam + '\'' +
+                '}';
+    }
 }
