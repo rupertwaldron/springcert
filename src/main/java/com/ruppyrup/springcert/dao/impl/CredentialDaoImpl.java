@@ -1,8 +1,8 @@
 package com.ruppyrup.springcert.dao.impl;
 
 import com.ruppyrup.springcert.dao.CredentialDao;
-import com.ruppyrup.springcert.dao.CredentialRowMapper;
 import com.ruppyrup.springcert.model.Credential;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
+import java.sql.ResultSet;
 import java.util.List;
 
 @Repository
@@ -36,14 +37,14 @@ public class CredentialDaoImpl extends JdbcDaoSupport implements CredentialDao {
     @Override
     public List<Credential> getAllCredentials() {
         String sql = "SELECT * FROM " + dbname;
-        return getJdbcTemplate().query(sql, new CredentialRowMapper());
+        return getJdbcTemplate().query(sql, this::rowMapper);
     }
 
     @Override
     public Credential getCredential(String credentialId) {
         String sql = "SELECT * FROM " + dbname + " where credentialId='" + credentialId + "'";
 
-        List<Credential> credentials = getJdbcTemplate().query(sql, new CredentialRowMapper());
+        List<Credential> credentials = getJdbcTemplate().query(sql, this::rowMapper);
 
         if (credentials.isEmpty()) return null;
 
@@ -97,5 +98,13 @@ public class CredentialDaoImpl extends JdbcDaoSupport implements CredentialDao {
 
     }
 
-    //todo need to add a clean to drop the table
+    @SneakyThrows
+    private Credential rowMapper(ResultSet resultSet, int rowNum) {
+        return new Credential(
+                resultSet.getString("credentialId"),
+                resultSet.getString("url"),
+                resultSet.getString("login"),
+                resultSet.getString("password"));
+    }
+
 }
