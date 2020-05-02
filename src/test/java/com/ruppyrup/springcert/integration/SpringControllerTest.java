@@ -6,6 +6,8 @@ import com.jayway.jsonpath.JsonPath;
 import com.ruppyrup.springcert.jwt.JwtTokenUtil;
 import com.ruppyrup.springcert.jwt.JwtUserDetailsService;
 import com.ruppyrup.springcert.model.Credential;
+import com.ruppyrup.springcert.model.UserDTO;
+import com.ruppyrup.springcert.model.UserDao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -43,12 +47,22 @@ class SpringControllerTest {
     @Value("${jwt.secret}")
     private String username;
 
+    @Value("${jwt.pwd}")
+    private String password;
+
     private String token;
 
     private HttpHeaders headers;
 
+    @Autowired
+    private static UserDao userDao;
+
     @BeforeEach
     void getToken() {
+        UserDTO user = new UserDTO();
+        user.setPassword("nice");
+        user.setUsername("janice");
+        userDetailsService.save(user);
         final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         token = jwtTokenUtil.generateToken(userDetails);
         List<MediaType> mediaTypes = new ArrayList<>();
