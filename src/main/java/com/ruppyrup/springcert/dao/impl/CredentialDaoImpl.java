@@ -35,14 +35,14 @@ public class CredentialDaoImpl extends JdbcDaoSupport implements CredentialDao {
     }
 
     @Override
-    public List<Credential> getAllCredentials() {
-        String sql = "SELECT * FROM " + dbname;
+    public List<Credential> getAllCredentials(String user) {
+        String sql = "SELECT * FROM " + dbname + " WHERE user='" + user + "'";
         return getJdbcTemplate().query(sql, this::rowMapper);
     }
 
     @Override
-    public Credential getCredential(String credentialId) {
-        String sql = "SELECT * FROM " + dbname + " where credentialId='" + credentialId + "'";
+    public Credential getCredential(String credentialId, String user) {
+        String sql = "SELECT * FROM " + dbname + " WHERE credentialId='" + credentialId + "' AND user='" + user + "'";
 
         List<Credential> credentials = getJdbcTemplate().query(sql, this::rowMapper);
 
@@ -54,32 +54,33 @@ public class CredentialDaoImpl extends JdbcDaoSupport implements CredentialDao {
     @Override
     public Credential create(Credential credential) {
 
-        if (getCredential(credential.getCredentialId()) != null) {
+        if (getCredential(credential.getCredentialId(), credential.getUser()) != null) {
             return new Credential(credential.getCredentialId() + " Already exists");
         }
 
-        String sql = "INSERT INTO " + dbname + "(credentialId, url, login, password) VALUES(:credentialId, :url, :login, :password)";
+        String sql = "INSERT INTO " + dbname + "(credentialId, url, login, password, user) VALUES(:credentialId, :url, :login, :password, :user)";
         SqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue("credentialId", credential.getCredentialId())
                 .addValue("url", credential.getUrl())
                 .addValue("login", credential.getLogin())
-                .addValue("password", credential.getPassword());
+                .addValue("password", credential.getPassword())
+                .addValue("user", credential.getUser());
         namedParameterJdbcTemplate.update(sql, parameterSource);
         return credential;
     }
 
     @Override
-    public Credential delete(String credentialId) {
-        Credential credentialToDelete = getCredential(credentialId);
+    public Credential delete(String credentialId, String user) {
+        Credential credentialToDelete = getCredential(credentialId, user);
 
         if (credentialToDelete == null) {
             return new Credential(credentialId + " Does not exist");
         }
 
 
-        String sql = "DELETE FROM " + dbname + " WHERE credentialId=?";
+        String sql = "DELETE FROM " + dbname + " WHERE credentialId=? AND user=?";
 
-        int rowsAffected = getJdbcTemplate().update(sql, credentialId);
+        int rowsAffected = getJdbcTemplate().update(sql, credentialId, user);
 
         if (rowsAffected != 1) return new Credential(credentialId + " More or Less than one record altered");
 
@@ -88,12 +89,12 @@ public class CredentialDaoImpl extends JdbcDaoSupport implements CredentialDao {
 
     @Override
     public Credential update(Credential credential) {
-        if (getCredential(credential.getCredentialId()) == null) {
+        if (getCredential(credential.getCredentialId(), credential.getUser()) == null) {
             return new Credential(credential.getCredentialId() + " Does not exist");
         }
 
-        String sql = "UPDATE " + dbname + " SET url = ?, login = ?, password = ? WHERE credentialId= ?";
-        getJdbcTemplate().update(sql, credential.getUrl(), credential.getLogin(), credential.getPassword(), credential.getCredentialId());
+        String sql = "UPDATE " + dbname + " SET url = ?, login = ?, password = ? WHERE credentialId= ? AND user=?";
+        getJdbcTemplate().update(sql, credential.getUrl(), credential.getLogin(), credential.getPassword(), credential.getCredentialId(), credential.getUser());
         return credential;
 
     }
@@ -104,7 +105,8 @@ public class CredentialDaoImpl extends JdbcDaoSupport implements CredentialDao {
                 resultSet.getString("credentialId"),
                 resultSet.getString("url"),
                 resultSet.getString("login"),
-                resultSet.getString("password"));
+                resultSet.getString("password"),
+                resultSet.getString("user"));
     }
 
 }

@@ -14,12 +14,14 @@ public class Credential {
     private String url;
     private String login;
     private String password;
+    private String user;
 
     public Credential(String credentialId) {
         this.credentialId = credentialId;
         this.url = hiddenParam;
         this.login = hiddenParam;
         this.password = hiddenParam;
+        this.user = hiddenParam;
     }
 
     @Override
@@ -29,6 +31,7 @@ public class Credential {
                 ", url='" + url + '\'' +
                 ", login='" + hiddenParam + '\'' +
                 ", password='" + hiddenParam + '\'' +
+                ", user='" + user + '\'' +
                 '}';
     }
 }

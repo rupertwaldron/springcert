@@ -102,7 +102,7 @@ class SpringControllerTest {
     @Test
     void createCredential() throws JsonProcessingException {
         //given database is loaded
-        Credential credential = new Credential("Tops tiles", "www.topstiles.com", "rupert.waldron@yahoo.co.uk", "tilly");
+        Credential credential = new Credential("Tops tiles", "www.topstiles.com", "rupert.waldron@yahoo.co.uk", "tilly", "javainuse");
         ObjectMapper mapper = new ObjectMapper();
         String credentialJson = mapper.writeValueAsString(credential);
         HttpEntity<String> entity = new HttpEntity<>(credentialJson, headers);
@@ -118,7 +118,7 @@ class SpringControllerTest {
     @Test
     void updateCredential() throws JsonProcessingException {
         //given database is loaded
-        Credential credential = new Credential("Amazon", "amazon.co.uk", "rupert.waldron@ruppyrup.com", "bigjohn");
+        Credential credential = new Credential("Amazon", "amazon.co.uk", "rupert.waldron@ruppyrup.com", "bigjohn", "javainuse");
         ObjectMapper mapper = new ObjectMapper();
         String credentialJson = mapper.writeValueAsString(credential);
         HttpEntity<String> entity = new HttpEntity<>(credentialJson, headers);

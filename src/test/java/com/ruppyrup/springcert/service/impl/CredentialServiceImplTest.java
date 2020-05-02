@@ -22,37 +22,53 @@ class CredentialServiceImplTest {
     private Credential credential4;
     private Credential credential5;
     private Credential credential6;
+    private Credential credential7;
+    private Credential credential8;
+    private Credential credential9;
+    private Credential credential10;
+    private String user1;
+    private String user2;
 
     @Autowired
     CredentialService credentialService;
 
     @BeforeEach
     void setUp() {
-        credential1 = new Credential("Amazon", "www.amazon.com", "pete", "football");
-        credential2 = new Credential("PondPlanet", "www.pondplanet.com", "ruppyrup", "feelsick");
-        credential3 = new Credential("John Lewis", "www.johnlewis.com", "rupert.waldron@yahoo.co.uk", "polly");
-        credential4 = new Credential("Tops tiles", "www.topstiles.com", "rupert.waldron@yahoo.co.uk", "tilly");
-        credential5 = new Credential("PondPlanet", "www.pondplanet2.com", "Lee", "monster");
-        credential6 = new Credential("Pratts Pods", "www.pp.com", "Simon", "gobsmack");
+        user1 = "javainuse";
+        user2 = "ruppyrup";
+        credential1 = new Credential("Amazon", "www.amazon.com", "pete", "football", user1);
+        credential2 = new Credential("PondPlanet", "www.pondplanet.com", "ruppyrup", "feelsick", user1);
+        credential3 = new Credential("John Lewis", "www.johnlewis.com", "rupert.waldron@yahoo.co.uk", "polly", user1);
+        credential4 = new Credential("Tops tiles", "www.topstiles.com", "rupert.waldron@yahoo.co.uk", "tilly", user1);
+        credential5 = new Credential("PondPlanet", "www.pondplanet2.com", "Lee", "monster", user1);
+        credential6 = new Credential("Pratts Pods", "www.pp.com", "Simon", "gobsmack", user1);
+        credential7 = new Credential("Amazon", "www.amazon.com", "rupert", "sweetpea", user2);
+        credential8 = new Credential("John Lewis", "www.johnlewis.com", "ruppyruyp@yahoo.co.uk", "deadsea", user2);
+        credential9 = new Credential("John Lewis2", "www.johnlewis2.com", "ruppyruyp2@yahoo.co.uk", "deadsea2", user2);
+        credential10 = new Credential("John Lewis", "www.HouseofFraser.com", "ruppyruyp@yahoo.co.uk", "deadsea", user2);
     }
 
     @Test
-    void getAllCredentials() {
-        assertThat(credentialService.getAllCredentials()).containsExactlyInAnyOrder(credential3, credential2, credential1);
+    void getAllCredentialsforUser() {
+        assertThat(credentialService.getAllCredentials(user1)).containsExactlyInAnyOrder(credential3, credential2, credential1);
+        assertThat(credentialService.getAllCredentials(user2)).containsExactlyInAnyOrder(credential7, credential8);
     }
 
     @Test
     void getCredential() {
-        assertThat(credentialService.getCredential("Amazon")).isEqualTo(credential1);
+        assertThat(credentialService.getCredential("Amazon", user1)).isEqualTo(credential1);
+        assertThat(credentialService.getCredential("Amazon", user2)).isEqualTo(credential7);
     }
 
     @Test
     void createCredential() {
         //when
         credentialService.createCredential(credential4);
+        credentialService.createCredential(credential9);
 
         //then
-        assertThat(credentialService.getCredential("Tops tiles")).isEqualTo(credential4);
+        assertThat(credentialService.getCredential(credential4.getCredentialId(), credential4.getUser())).isEqualTo(credential4);
+        assertThat(credentialService.getCredential(credential9.getCredentialId(), credential9.getUser())).isEqualTo(credential9);
     }
 
     @Test
@@ -69,9 +85,11 @@ class CredentialServiceImplTest {
     void updateCredential() {
         //when
         credentialService.updateCredential(credential5);
+        credentialService.updateCredential(credential10);
 
         //then
-        assertThat(credentialService.getCredential(credential5.getCredentialId())).isEqualTo(credential5);
+        assertThat(credentialService.getCredential(credential5.getCredentialId(), credential5.getUser())).isEqualTo(credential5);
+        assertThat(credentialService.getCredential(credential10.getCredentialId(), credential10.getUser())).isEqualTo(credential10);
     }
 
     @Test
@@ -87,10 +105,10 @@ class CredentialServiceImplTest {
     @Test
     void deleteCredential() {
         //when
-        Credential credential = credentialService.deleteCredential(credential3.getCredentialId());
+        Credential credential = credentialService.deleteCredential(credential3.getCredentialId(), credential3.getUser());
 
         //then
         assertThat(credential).isEqualTo(credential3);
-        assertThat(credentialService.getCredential(credential3.getCredentialId())).isNull();
+        assertThat(credentialService.getCredential(credential3.getCredentialId(), user1)).isNull();
     }
 }

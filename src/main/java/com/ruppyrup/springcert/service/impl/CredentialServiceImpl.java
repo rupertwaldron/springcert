@@ -15,13 +15,13 @@ public class CredentialServiceImpl implements CredentialService {
     CredentialDao credentialDao;
 
     @Override
-    public List<Credential> getAllCredentials() {
-        return credentialDao.getAllCredentials();
+    public List<Credential> getAllCredentials(String user) {
+        return credentialDao.getAllCredentials(user);
     }
 
     @Override
-    public Credential getCredential(String credentialId) {
-        return credentialDao.getCredential(credentialId);
+    public Credential getCredential(String credentialId, String user) {
+        return credentialDao.getCredential(credentialId, user);
     }
 
     @Override
@@ -35,8 +35,8 @@ public class CredentialServiceImpl implements CredentialService {
     }
 
     @Override
-    public Credential deleteCredential(String credentialId) {
-        return credentialDao.delete(credentialId);
+    public Credential deleteCredential(String credentialId, String user) {
+        return credentialDao.delete(credentialId, user);
     }
 
 
