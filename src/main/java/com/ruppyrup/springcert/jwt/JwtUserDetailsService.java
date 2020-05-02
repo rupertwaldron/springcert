@@ -32,7 +32,6 @@ public class JwtUserDetailsService implements UserDetailsService {
     }
 
     public DAOUser save(UserDTO user) {
-        //todo update save not to save duplicate users
         DAOUser existingUser = userDao.findByUsername(user.getUsername());
         if (existingUser != null) return existingUser;
 
@@ -42,7 +41,11 @@ public class JwtUserDetailsService implements UserDetailsService {
         return userDao.save(newUser);
     }
 
-    public void delete(String username) {
-        userDao.deleteByUsername(username);
+    public void deleteUser(DAOUser user) {
+        userDao.delete(user);
+    }
+
+    public DAOUser getUser(String userName) {
+        return userDao.findByUsername(userName);
     }
 }

@@ -7,7 +7,7 @@ import com.ruppyrup.springcert.jwt.JwtTokenUtil;
 import com.ruppyrup.springcert.jwt.JwtUserDetailsService;
 import com.ruppyrup.springcert.model.Credential;
 import com.ruppyrup.springcert.model.UserDTO;
-import com.ruppyrup.springcert.model.UserDao;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +44,7 @@ class SpringControllerTest {
     @Autowired
     private JwtUserDetailsService userDetailsService;
 
+
     @Value("${jwt.secret}")
     private String username;
 
@@ -54,14 +55,11 @@ class SpringControllerTest {
 
     private HttpHeaders headers;
 
-    @Autowired
-    private static UserDao userDao;
-
     @BeforeEach
     void getToken() {
         UserDTO user = new UserDTO();
-        user.setPassword("nice");
-        user.setUsername("janice");
+        user.setPassword(password);
+        user.setUsername(username);
         userDetailsService.save(user);
         final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         token = jwtTokenUtil.generateToken(userDetails);
@@ -71,6 +69,11 @@ class SpringControllerTest {
         headers.setBearerAuth(token);
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(mediaTypes);
+    }
+
+    @AfterEach
+    void deleteUser() {
+        userDetailsService.deleteUser(userDetailsService.getUser(username));
     }
 
     @Test
@@ -89,7 +92,6 @@ class SpringControllerTest {
         //given database is loaded
         HttpEntity<String> entity = new HttpEntity<>("body", headers);
         //when
-        //String result = restTemplate.getForObject("http://localhost:" + port + "/credentials", String.class);
         ResponseEntity<List> exchange = restTemplate.exchange("http://localhost:" + port + "/credentials", HttpMethod.GET, entity, List.class);
         List<String> credentialId = JsonPath.parse(exchange.getBody()).read("$[*].credentialId");
 
