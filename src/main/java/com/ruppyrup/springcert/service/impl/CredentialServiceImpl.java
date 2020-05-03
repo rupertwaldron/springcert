@@ -4,6 +4,7 @@ import com.ruppyrup.springcert.dao.CredentialDao;
 import com.ruppyrup.springcert.model.Credential;
 import com.ruppyrup.springcert.service.CredentialService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,13 +16,13 @@ public class CredentialServiceImpl implements CredentialService {
     CredentialDao credentialDao;
 
     @Override
-    public List<Credential> getAllCredentials(String user) {
-        return credentialDao.getAllCredentials(user);
+    public List<Credential> getAllCredentials() {
+        return credentialDao.getAllCredentials(getAuthorizedUser());
     }
 
     @Override
-    public Credential getCredential(String credentialId, String user) {
-        return credentialDao.getCredential(credentialId, user);
+    public Credential getCredential(String credentialId) {
+        return credentialDao.getCredential(credentialId, getAuthorizedUser());
     }
 
     @Override
@@ -35,8 +36,12 @@ public class CredentialServiceImpl implements CredentialService {
     }
 
     @Override
-    public Credential deleteCredential(String credentialId, String user) {
-        return credentialDao.delete(credentialId, user);
+    public Credential deleteCredential(String credentialId) {
+        return credentialDao.delete(credentialId, getAuthorizedUser());
+    }
+
+    private String getAuthorizedUser() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
 
