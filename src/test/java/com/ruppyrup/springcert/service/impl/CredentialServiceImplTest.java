@@ -1,5 +1,6 @@
 package com.ruppyrup.springcert.service.impl;
 
+import com.ruppyrup.springcert.jwt.JwtContextManagerTestImpl;
 import com.ruppyrup.springcert.model.Credential;
 import com.ruppyrup.springcert.service.CredentialService;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,6 +33,9 @@ class CredentialServiceImplTest {
     @Autowired
     CredentialService credentialService;
 
+    @Autowired
+    JwtContextManagerTestImpl jwtContextManager;
+
     @BeforeEach
     void setUp() {
         user1 = "javainuse";
@@ -49,15 +53,17 @@ class CredentialServiceImplTest {
     }
 
     @Test
-    void getAllCredentialsforUser() {
-        assertThat(credentialService.getAllCredentials(user1)).containsExactlyInAnyOrder(credential3, credential2, credential1);
-        assertThat(credentialService.getAllCredentials(user2)).containsExactlyInAnyOrder(credential7, credential8);
+    void getAllCredentials() {
+        jwtContextManager.setUser(user1);
+        assertThat(credentialService.getAllCredentials()).containsExactlyInAnyOrder(credential3, credential2, credential1);
+        jwtContextManager.setUser(user2);
+        assertThat(credentialService.getAllCredentials()).containsExactlyInAnyOrder(credential7, credential8);
     }
 
     @Test
     void getCredential() {
-        assertThat(credentialService.getCredential("Amazon", user1)).isEqualTo(credential1);
-        assertThat(credentialService.getCredential("Amazon", user2)).isEqualTo(credential7);
+        assertThat(credentialService.getCredential("Amazon")).isEqualTo(credential1);
+        assertThat(credentialService.getCredential("Amazon")).isEqualTo(credential7);
     }
 
     @Test
@@ -67,8 +73,8 @@ class CredentialServiceImplTest {
         credentialService.createCredential(credential9);
 
         //then
-        assertThat(credentialService.getCredential(credential4.getCredentialId(), credential4.getUser())).isEqualTo(credential4);
-        assertThat(credentialService.getCredential(credential9.getCredentialId(), credential9.getUser())).isEqualTo(credential9);
+        assertThat(credentialService.getCredential(credential4.getCredentialId())).isEqualTo(credential4);
+        assertThat(credentialService.getCredential(credential9.getCredentialId())).isEqualTo(credential9);
     }
 
     @Test
@@ -88,8 +94,8 @@ class CredentialServiceImplTest {
         credentialService.updateCredential(credential10);
 
         //then
-        assertThat(credentialService.getCredential(credential5.getCredentialId(), credential5.getUser())).isEqualTo(credential5);
-        assertThat(credentialService.getCredential(credential10.getCredentialId(), credential10.getUser())).isEqualTo(credential10);
+        assertThat(credentialService.getCredential(credential5.getCredentialId())).isEqualTo(credential5);
+        assertThat(credentialService.getCredential(credential10.getCredentialId())).isEqualTo(credential10);
     }
 
     @Test
@@ -105,10 +111,10 @@ class CredentialServiceImplTest {
     @Test
     void deleteCredential() {
         //when
-        Credential credential = credentialService.deleteCredential(credential3.getCredentialId(), credential3.getUser());
+        Credential credential = credentialService.deleteCredential(credential3.getCredentialId());
 
         //then
         assertThat(credential).isEqualTo(credential3);
-        assertThat(credentialService.getCredential(credential3.getCredentialId(), user1)).isNull();
+        assertThat(credentialService.getCredential(credential3.getCredentialId())).isNull();
     }
 }
