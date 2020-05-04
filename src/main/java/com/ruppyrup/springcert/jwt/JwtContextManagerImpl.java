@@ -5,7 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("dev")
+@Profile({"dev", "integration"})
 public class JwtContextManagerImpl implements JwtContextManager {
     @Override
     public String getAuthorizedUser() {

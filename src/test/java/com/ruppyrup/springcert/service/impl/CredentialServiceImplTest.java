@@ -1,6 +1,6 @@
 package com.ruppyrup.springcert.service.impl;
 
-import com.ruppyrup.springcert.jwt.JwtContextManagerTestImpl;
+import com.ruppyrup.springcert.config.JwtContextManagerTestImpl;
 import com.ruppyrup.springcert.model.Credential;
 import com.ruppyrup.springcert.service.CredentialService;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,43 +43,55 @@ class CredentialServiceImplTest {
         credential1 = new Credential("Amazon", "www.amazon.com", "pete", "football", user1);
         credential2 = new Credential("PondPlanet", "www.pondplanet.com", "ruppyrup", "feelsick", user1);
         credential3 = new Credential("John Lewis", "www.johnlewis.com", "rupert.waldron@yahoo.co.uk", "polly", user1);
-        credential4 = new Credential("Tops tiles", "www.topstiles.com", "rupert.waldron@yahoo.co.uk", "tilly", user1);
-        credential5 = new Credential("PondPlanet", "www.pondplanet2.com", "Lee", "monster", user1);
+        credential4 = new Credential("Tops tiles", "www.topstiles.com", "rupert.waldron@yahoo.co.uk", "tilly", "");
+        credential5 = new Credential("PondPlanet", "www.pondplanet2.com", "Lee", "monster", "");
         credential6 = new Credential("Pratts Pods", "www.pp.com", "Simon", "gobsmack", user1);
         credential7 = new Credential("Amazon", "www.amazon.com", "rupert", "sweetpea", user2);
         credential8 = new Credential("John Lewis", "www.johnlewis.com", "ruppyruyp@yahoo.co.uk", "deadsea", user2);
-        credential9 = new Credential("John Lewis2", "www.johnlewis2.com", "ruppyruyp2@yahoo.co.uk", "deadsea2", user2);
-        credential10 = new Credential("John Lewis", "www.HouseofFraser.com", "ruppyruyp@yahoo.co.uk", "deadsea", user2);
+        credential9 = new Credential("John Lewis2", "www.johnlewis2.com", "ruppyruyp2@yahoo.co.uk", "deadsea2", "");
+        credential10 = new Credential("John Lewis", "www.HouseofFraser.com", "ruppyruyp@yahoo.co.uk", "deadsea", "");
     }
 
     @Test
     void getAllCredentials() {
         jwtContextManager.setUser(user1);
         assertThat(credentialService.getAllCredentials()).containsExactlyInAnyOrder(credential3, credential2, credential1);
+
         jwtContextManager.setUser(user2);
         assertThat(credentialService.getAllCredentials()).containsExactlyInAnyOrder(credential7, credential8);
     }
 
     @Test
     void getCredential() {
+        jwtContextManager.setUser(user1);
         assertThat(credentialService.getCredential("Amazon")).isEqualTo(credential1);
+
+        jwtContextManager.setUser(user2);
         assertThat(credentialService.getCredential("Amazon")).isEqualTo(credential7);
     }
 
     @Test
     void createCredential() {
         //when
+        jwtContextManager.setUser(user1);
         credentialService.createCredential(credential4);
+        credential4.setUser(jwtContextManager.getAuthorizedUser());
+
+        jwtContextManager.setUser(user2);
         credentialService.createCredential(credential9);
+        credential9.setUser(jwtContextManager.getAuthorizedUser());
 
         //then
+        jwtContextManager.setUser(user1);
         assertThat(credentialService.getCredential(credential4.getCredentialId())).isEqualTo(credential4);
+        jwtContextManager.setUser(user2);
         assertThat(credentialService.getCredential(credential9.getCredentialId())).isEqualTo(credential9);
     }
 
     @Test
     void failureToCreateDuplicateCredentialId() {
         //when
+        jwtContextManager.setUser(user1);
         Credential credential = credentialService.createCredential(credential5);
         Credential rejectedCredential = new Credential(credential5.getCredentialId() + " Already exists");
         //then
@@ -90,17 +102,25 @@ class CredentialServiceImplTest {
     @Test
     void updateCredential() {
         //when
+        jwtContextManager.setUser(user1);
         credentialService.updateCredential(credential5);
+        credential5.setUser(jwtContextManager.getAuthorizedUser());
+
+        jwtContextManager.setUser(user2);
         credentialService.updateCredential(credential10);
+        credential10.setUser(jwtContextManager.getAuthorizedUser());
 
         //then
+        jwtContextManager.setUser(user1);
         assertThat(credentialService.getCredential(credential5.getCredentialId())).isEqualTo(credential5);
+        jwtContextManager.setUser(user2);
         assertThat(credentialService.getCredential(credential10.getCredentialId())).isEqualTo(credential10);
     }
 
     @Test
     void updateNonExistingCredential() {
         //when
+        jwtContextManager.setUser(user1);
         Credential credential = credentialService.updateCredential(credential6);
         Credential rejectedCredential = new Credential(credential6.getCredentialId() + " Does not exist");
 
@@ -111,6 +131,7 @@ class CredentialServiceImplTest {
     @Test
     void deleteCredential() {
         //when
+        jwtContextManager.setUser(user1);
         Credential credential = credentialService.deleteCredential(credential3.getCredentialId());
 
         //then

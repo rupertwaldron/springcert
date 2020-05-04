@@ -30,11 +30,13 @@ public class CredentialServiceImpl implements CredentialService {
 
     @Override
     public Credential createCredential(Credential credential) {
+        credential.setUser(jwtContextManager.getAuthorizedUser());
         return credentialDao.create(credential);
     }
 
     @Override
     public Credential updateCredential(Credential credential) {
+        credential.setUser(jwtContextManager.getAuthorizedUser());
         return credentialDao.update(credential);
     }
 

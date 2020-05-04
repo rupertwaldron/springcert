@@ -1,5 +1,6 @@
-package com.ruppyrup.springcert.jwt;
+package com.ruppyrup.springcert.config;
 
+import com.ruppyrup.springcert.jwt.JwtContextManager;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 

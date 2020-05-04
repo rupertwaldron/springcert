@@ -23,13 +23,12 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @Sql({"/test-schema-mysql.sql"})
-@ActiveProfiles("test")
+@ActiveProfiles("integration")
 class SpringControllerTest {
 
     @LocalServerPort
@@ -44,8 +43,7 @@ class SpringControllerTest {
     @Autowired
     private JwtUserDetailsService userDetailsService;
 
-
-    @Value("${jwt.secret}")
+    @Value("${jwt.username}")
     private String username;
 
     @Value("${jwt.pwd}")
@@ -54,6 +52,8 @@ class SpringControllerTest {
     private String token;
 
     private HttpHeaders headers;
+
+    //todo need to add error paths
 
     @BeforeEach
     void getToken() {
@@ -69,6 +69,7 @@ class SpringControllerTest {
         headers.setBearerAuth(token);
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(mediaTypes);
+        //jwtContextManager.setUser(username);
     }
 
     @AfterEach
@@ -77,14 +78,14 @@ class SpringControllerTest {
     }
 
     @Test
-    void getCredentials() {
+    void getCredential() {
         //given database is loaded and jwt token fetched
         HttpEntity<String> entity = new HttpEntity<>("body", headers);
         //when
         ResponseEntity<Credential> exchange = restTemplate.exchange("http://localhost:" + port + "/credentials/Amazon", HttpMethod.GET, entity, Credential.class);
 
         //then
-        assertThat(Objects.requireNonNull(exchange.getBody()).getCredentialId()).isEqualTo("Amazon");
+        assertThat(exchange.getBody().getCredentialId()).isEqualTo("Amazon");
     }
 
     @Test
