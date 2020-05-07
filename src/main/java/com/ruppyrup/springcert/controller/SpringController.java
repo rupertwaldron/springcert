@@ -3,6 +3,8 @@ package com.ruppyrup.springcert.controller;
 import com.ruppyrup.springcert.model.Credential;
 import com.ruppyrup.springcert.service.CredentialService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,9 +16,8 @@ public class SpringController {
     CredentialService credentialService;
 
     @GetMapping("/credentials")
-    @ResponseBody
-    public List<Credential> getAllCredentials() {
-        return credentialService.getAllCredentials();
+    public ResponseEntity<List<Credential>> getAllCredentials() {
+        return new ResponseEntity<List<Credential>>(credentialService.getAllCredentials(), HttpStatus.OK);
     }
 
     @GetMapping("/credentials/{id}")
