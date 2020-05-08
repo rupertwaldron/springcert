@@ -3,6 +3,7 @@ package com.ruppyrup.springcert.integration;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
+import com.ruppyrup.springcert.exceptions.ExistingUserException;
 import com.ruppyrup.springcert.jwt.JwtTokenUtil;
 import com.ruppyrup.springcert.jwt.JwtUserDetailsService;
 import com.ruppyrup.springcert.model.Credential;
@@ -58,7 +59,7 @@ class SpringControllerTest {
     //todo need to add error paths
 
     @BeforeEach
-    void getToken() {
+    void getToken() throws ExistingUserException {
         UserDTO user = new UserDTO();
         user.setPassword(password);
         user.setUsername(username);

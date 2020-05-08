@@ -3,6 +3,7 @@ package com.ruppyrup.springcert.integration;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
+import com.ruppyrup.springcert.exceptions.ExistingUserException;
 import com.ruppyrup.springcert.jwt.JwtTokenUtil;
 import com.ruppyrup.springcert.jwt.JwtUserDetailsService;
 import com.ruppyrup.springcert.model.UserDTO;
@@ -54,23 +55,15 @@ class UserControllerTest {
     private UserDTO user = new UserDTO();
     private ObjectMapper mapper = new ObjectMapper();
 
-
-    //todo need to add error paths
-
     @BeforeEach
     void getToken() {
-        user.setPassword(password);
         user.setUsername(username);
-//        userDetailsService.save(user);
-//        final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-//        token = jwtTokenUtil.generateToken(userDetails);
+        user.setPassword(password);
         List<MediaType> mediaTypes = new ArrayList<>();
         mediaTypes.add(MediaType.APPLICATION_JSON);
         headers = new HttpHeaders();
-//        headers.setBearerAuth(token);
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(mediaTypes);
-        //jwtContextManager.setUser(username);
     }
 
     @AfterEach
@@ -86,31 +79,29 @@ class UserControllerTest {
 
         //when
         ResponseEntity<String> exchange = restTemplate.exchange("http://localhost:" + port + "/register", HttpMethod.POST, entity, String.class);
-        String response = JsonPath.parse(exchange.getBody()).read("$.username");
 
         //then
-        assertThat(response).isEqualTo(username);
+        assertThat(exchange.getBody()).isEqualTo("User created");
     }
 
     @Test
-    void authenticateUser() throws JsonProcessingException {
+    void authenticateUser() throws JsonProcessingException, ExistingUserException, InterruptedException {
         //given
         userDetailsService.save(user);
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        String token = jwtTokenUtil.generateToken(userDetails);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         String userJson = mapper.writeValueAsString(user);
         HttpEntity<String> entity = new HttpEntity<>(userJson, headers);
 
         //when
         ResponseEntity<String> exchange = restTemplate.exchange("http://localhost:" + port + "/authenticate", HttpMethod.POST, entity, String.class);
-        String responseToken = JsonPath.parse(exchange.getBody()).read("$.token");
+        String jwtToken = JsonPath.parse(exchange.getBody()).read("$.token");
 
         //then
-        assertThat(responseToken).isEqualTo(token);
+        assertThat(jwtTokenUtil.validateToken(jwtToken, userDetails)).isTrue();
     }
 
     @Test
-    void registerSameUserTwice_shouldReturnError() throws JsonProcessingException {
+    void registerSameUserTwice_shouldReturnError() throws Exception {
         //given database is empty
         userDetailsService.save(user);
         String userJson = mapper.writeValueAsString(user);
@@ -118,9 +109,8 @@ class UserControllerTest {
 
         //when
         ResponseEntity<String> exchange = restTemplate.exchange("http://localhost:" + port + "/register", HttpMethod.POST, entity, String.class);
-        String response = JsonPath.parse(exchange.getBody()).read("$.username");
 
         //then
-        assertThat(response).isEqualTo(username);
+        assertThat(exchange.getBody()).isEqualTo("User already exists");
     }
 }

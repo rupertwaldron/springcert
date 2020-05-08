@@ -1,8 +1,9 @@
 package com.ruppyrup.springcert.jwt;
 
-import com.ruppyrup.springcert.model.DAOUser;
+import com.ruppyrup.springcert.dao.impl.DAOUser;
+import com.ruppyrup.springcert.exceptions.ExistingUserException;
 import com.ruppyrup.springcert.model.UserDTO;
-import com.ruppyrup.springcert.model.UserDao;
+import com.ruppyrup.springcert.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,9 +32,9 @@ public class JwtUserDetailsService implements UserDetailsService {
         return new User(user.getUsername(), user.getPassword(), new ArrayList<>());
     }
 
-    public DAOUser save(UserDTO user) {
+    public DAOUser save(UserDTO user) throws ExistingUserException {
         DAOUser existingUser = userDao.findByUsername(user.getUsername());
-        if (existingUser != null) return existingUser;
+        if (existingUser != null) throw new ExistingUserException();
 
         DAOUser newUser = new DAOUser();
         newUser.setUsername(user.getUsername());

@@ -1,4 +1,4 @@
-package com.ruppyrup.springcert.model;
+package com.ruppyrup.springcert.dao.impl;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
