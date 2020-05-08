@@ -17,21 +17,27 @@ public class SpringController {
 
     @GetMapping("/credentials")
     public ResponseEntity<List<Credential>> getAllCredentials() {
-        return new ResponseEntity<List<Credential>>(credentialService.getAllCredentials(), HttpStatus.OK);
+        return new ResponseEntity<>(credentialService.getAllCredentials(), HttpStatus.OK);
     }
 
     @GetMapping("/credentials/{id}")
-    @ResponseBody
-    public Credential findCredential(@PathVariable String id) {
-        return credentialService.getCredential(id);
+    public ResponseEntity<Credential> findCredential(@PathVariable String id) {
+        Credential credential = credentialService.getCredential(id);
+        HttpStatus status = HttpStatus.OK;
+        if (credential == null) status = HttpStatus.NOT_FOUND;
+        return ResponseEntity
+                        .status(status)
+                        .body(credential);
     }
 
+    //todo can't create a credential that is already there
     @PostMapping("/credentials")
     @ResponseBody
     public Credential createCredential(@RequestBody Credential credential) {
         return credentialService.createCredential(credential);
     }
 
+    //todo need to change so can't update a credential that doesn't exist
     @PutMapping("/credentials/{id}")
     @ResponseBody
     public Credential updateCredential(@RequestBody Credential credential) {
