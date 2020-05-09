@@ -55,7 +55,7 @@ public class CredentialDaoImpl extends JdbcDaoSupport implements CredentialDao {
     public Credential create(Credential credential) {
 
         if (getCredential(credential.getCredentialId(), credential.getUser()) != null) {
-            return new Credential(credential.getCredentialId() + " Already exists");
+            return null;
         }
 
         String sql = "INSERT INTO " + dbname + "(credentialId, url, login, password, user) VALUES(:credentialId, :url, :login, :password, :user)";
@@ -74,23 +74,20 @@ public class CredentialDaoImpl extends JdbcDaoSupport implements CredentialDao {
         Credential credentialToDelete = getCredential(credentialId, user);
 
         if (credentialToDelete == null) {
-            return new Credential(credentialId + " Does not exist");
+            return null;
         }
-
 
         String sql = "DELETE FROM " + dbname + " WHERE credentialId=? AND user=?";
 
         int rowsAffected = getJdbcTemplate().update(sql, credentialId, user);
-
         if (rowsAffected != 1) return new Credential(credentialId + " More or Less than one record altered");
-
         return credentialToDelete;
     }
 
     @Override
     public Credential update(Credential credential) {
         if (getCredential(credential.getCredentialId(), credential.getUser()) == null) {
-            return new Credential(credential.getCredentialId() + " Does not exist");
+            return null;
         }
 
         String sql = "UPDATE " + dbname + " SET url = ?, login = ?, password = ? WHERE credentialId= ? AND user=?";

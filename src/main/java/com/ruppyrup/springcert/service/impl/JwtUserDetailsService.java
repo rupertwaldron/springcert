@@ -1,4 +1,4 @@
-package com.ruppyrup.springcert.jwt;
+package com.ruppyrup.springcert.service.impl;
 
 import com.ruppyrup.springcert.dao.impl.DAOUser;
 import com.ruppyrup.springcert.exceptions.ExistingUserException;
@@ -12,8 +12,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 
+@Transactional
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
 

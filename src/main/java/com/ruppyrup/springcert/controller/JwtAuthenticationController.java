@@ -1,7 +1,11 @@
-package com.ruppyrup.springcert.jwt;
+package com.ruppyrup.springcert.controller;
 
 import com.ruppyrup.springcert.exceptions.ExistingUserException;
+import com.ruppyrup.springcert.jwt.JwtRequest;
+import com.ruppyrup.springcert.jwt.JwtResponse;
+import com.ruppyrup.springcert.jwt.JwtTokenUtil;
 import com.ruppyrup.springcert.model.UserDTO;
+import com.ruppyrup.springcert.service.impl.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

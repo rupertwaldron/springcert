@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import com.ruppyrup.springcert.exceptions.ExistingUserException;
 import com.ruppyrup.springcert.jwt.JwtTokenUtil;
-import com.ruppyrup.springcert.jwt.JwtUserDetailsService;
+import com.ruppyrup.springcert.service.impl.JwtUserDetailsService;
 import com.ruppyrup.springcert.model.UserDTO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

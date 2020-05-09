@@ -26,28 +26,38 @@ public class SpringController {
         HttpStatus status = HttpStatus.OK;
         if (credential == null) status = HttpStatus.NOT_FOUND;
         return ResponseEntity
-                        .status(status)
-                        .body(credential);
+                .status(status)
+                .body(credential);
     }
 
-    //todo can't create a credential that is already there
     @PostMapping("/credentials")
-    @ResponseBody
-    public Credential createCredential(@RequestBody Credential credential) {
-        return credentialService.createCredential(credential);
+    public ResponseEntity<Credential> createCredential(@RequestBody Credential credential) {
+        Credential createdCredential = credentialService.createCredential(credential);
+        HttpStatus status = HttpStatus.OK;
+        if (createdCredential == null) status = HttpStatus.CONFLICT;
+        return ResponseEntity
+                .status(status)
+                .body(credential);
     }
 
-    //todo need to change so can't update a credential that doesn't exist
     @PutMapping("/credentials/{id}")
-    @ResponseBody
-    public Credential updateCredential(@RequestBody Credential credential) {
-        return credentialService.updateCredential(credential);
+    public ResponseEntity<Credential> updateCredential(@RequestBody Credential credential) {
+        Credential updatedCredential = credentialService.updateCredential(credential);
+        HttpStatus status = HttpStatus.OK;
+        if (updatedCredential == null) status = HttpStatus.NOT_FOUND;
+        return ResponseEntity
+                .status(status)
+                .body(updatedCredential);
     }
 
     @DeleteMapping("/credentials/{id}")
-    @ResponseBody
-    public Credential deleteCredential(@PathVariable String id) {
-        return credentialService.deleteCredential(id);
+    public ResponseEntity<Credential>  deleteCredential(@PathVariable String id) {
+        Credential deletedCredential = credentialService.deleteCredential(id);
+        HttpStatus status = HttpStatus.OK;
+        if (deletedCredential == null) status = HttpStatus.NOT_FOUND;
+        return ResponseEntity
+                .status(status)
+                .body(deletedCredential);
     }
 
 }

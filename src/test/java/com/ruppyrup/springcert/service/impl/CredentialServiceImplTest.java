@@ -95,9 +95,8 @@ class CredentialServiceImplTest {
         //when
         jwtContextManager.setUser(user1);
         Credential credential = credentialService.createCredential(credential5);
-        Credential rejectedCredential = new Credential(credential5.getCredentialId() + " Already exists");
         //then
-        assertThat(credential).isEqualTo(rejectedCredential);
+        assertThat(credential).isNull();
     }
 
 
@@ -124,10 +123,9 @@ class CredentialServiceImplTest {
         //when
         jwtContextManager.setUser(user1);
         Credential credential = credentialService.updateCredential(credential6);
-        Credential rejectedCredential = new Credential(credential6.getCredentialId() + " Does not exist");
 
         //then
-        assertThat(credential).isEqualTo(rejectedCredential);
+        assertThat(credential).isNull();
     }
 
     @Test

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import com.ruppyrup.springcert.exceptions.ExistingUserException;
 import com.ruppyrup.springcert.jwt.JwtTokenUtil;
-import com.ruppyrup.springcert.jwt.JwtUserDetailsService;
+import com.ruppyrup.springcert.service.impl.JwtUserDetailsService;
 import com.ruppyrup.springcert.model.Credential;
 import com.ruppyrup.springcert.model.UserDTO;
 import org.junit.jupiter.api.AfterEach;
@@ -55,8 +55,6 @@ class SpringControllerTest {
     private String token;
 
     private HttpHeaders headers;
-
-    //todo need to add error paths
 
     @BeforeEach
     void getToken() throws ExistingUserException {
