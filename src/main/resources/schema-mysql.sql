@@ -1,4 +1,4 @@
--- DROP TABLE IF EXISTS credentials;
+DROP TABLE IF EXISTS credentials;
 
 CREATE TABLE IF NOT EXISTS credentials (
   credentialId VARCHAR(40) NOT NULL,
@@ -8,6 +8,8 @@ CREATE TABLE IF NOT EXISTS credentials (
   user VARCHAR(40) NOT NULL
 );
 
--- INSERT INTO credentials(credentialId,url,login,password,user)values("PondPlanet", "www.pondplanet.com", "ruppyrup", "feelsick", "ruppyrup");
--- INSERT INTO credentials(credentialId,url,login,password,user)values("Amazon", "www.amazon.com", "pete", "football", "rup");
--- INSERT INTO credentials(credentialId,url,login,password,user)values("John Lewis", "www.johnlewis.com", "rupert.waldron@yahoo.co.uk", "polly", "rup");
+INSERT INTO credentials(credentialId,url,login,password,user)values("PondPlanet", "www.pondplanet.com", "ruppyrup", "feelsick", "ruppyrup");
+INSERT INTO credentials(credentialId,url,login,password,user)values("Amazon", "www.amazon.com", "pete", "football", "rup");
+INSERT INTO credentials(credentialId,url,login,password,user)values("John Lewis", "www.johnlewis.com", "rupert.waldron@yahoo.co.uk", "polly", "rup");
+
+DROP TABLE IF EXISTS users;

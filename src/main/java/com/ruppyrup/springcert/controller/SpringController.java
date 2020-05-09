@@ -2,6 +2,7 @@ package com.ruppyrup.springcert.controller;
 
 import com.ruppyrup.springcert.model.Credential;
 import com.ruppyrup.springcert.service.CredentialService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 public class SpringController {
 
@@ -48,7 +50,7 @@ public class SpringController {
     public ResponseEntity<Credential> updateCredential(@RequestBody Credential credential) {
         Credential updatedCredential = credentialService.updateCredential(credential);
         HttpStatus status = HttpStatus.OK;
-        LOGGER.info("Update class has found {}", updatedCredential);
+        log.info("Update class has found {}", updatedCredential);
         if (updatedCredential == null) status = HttpStatus.NOT_FOUND;
         return ResponseEntity
                 .status(status)

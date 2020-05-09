@@ -3,6 +3,7 @@ package com.ruppyrup.springcert.dao.impl;
 import com.ruppyrup.springcert.dao.CredentialDao;
 import com.ruppyrup.springcert.model.Credential;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.util.List;
 
+@Slf4j
 @Repository
 public class CredentialDaoImpl extends JdbcDaoSupport implements CredentialDao {
 
@@ -93,7 +95,7 @@ public class CredentialDaoImpl extends JdbcDaoSupport implements CredentialDao {
         if (getCredential(credential.getCredentialId(), credential.getUser()) == null) {
             return null;
         }
-        LOGGER.info("CredentialDAO Update Credential = {}", credential);
+        log.info("CredentialDAO Update Credential = {}", credential);
         String sql = "UPDATE " + dbname + " SET url = ?, login = ?, password = ? WHERE credentialId= ? AND user=?";
         getJdbcTemplate().update(sql, credential.getUrl(), credential.getLogin(), credential.getPassword(), credential.getCredentialId(), credential.getUser());
         return credential;
