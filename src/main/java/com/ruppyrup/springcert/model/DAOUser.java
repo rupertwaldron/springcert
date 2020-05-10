@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "${user.database.name}")
+@Table(name = "users")
 public class DAOUser {
 
     @Id

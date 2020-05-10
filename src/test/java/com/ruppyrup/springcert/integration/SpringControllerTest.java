@@ -86,7 +86,7 @@ class SpringControllerTest {
         ResponseEntity<Credential> exchange = restTemplate.exchange("http://localhost:" + port + "/credentials/Amazon", HttpMethod.GET, entity, Credential.class);
 
         //then
-        assertThat(exchange.getBody().getCredentialId()).isEqualTo("Amazon");
+        assertThat(exchange.getBody().getCredentialName()).isEqualTo("Amazon");
     }
 
     @Test
@@ -95,10 +95,10 @@ class SpringControllerTest {
         HttpEntity<String> entity = new HttpEntity<>("body", headers);
         //when
         ResponseEntity<List> exchange = restTemplate.exchange("http://localhost:" + port + "/credentials", HttpMethod.GET, entity, List.class);
-        List<String> credentialId = JsonPath.parse(exchange.getBody()).read("$[*].credentialId");
+        List<String> CredentialName = JsonPath.parse(exchange.getBody()).read("$[*].CredentialName");
 
         //then
-        assertThat(credentialId).contains("Amazon", "PondPlanet", "John Lewis");
+        assertThat(CredentialName).contains("Amazon", "PondPlanet", "John Lewis");
     }
 
     @Test
@@ -142,6 +142,6 @@ class SpringControllerTest {
 
         //then
         Credential body = exchange.getBody();
-        assertThat(body.getCredentialId()).isEqualTo("Amazon");
+        assertThat(body.getCredentialName()).isEqualTo("Amazon");
     }
 }

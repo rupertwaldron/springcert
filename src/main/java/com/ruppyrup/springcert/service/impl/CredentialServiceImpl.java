@@ -7,10 +7,8 @@ import com.ruppyrup.springcert.service.CredentialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
-@Transactional
 @Service
 public class CredentialServiceImpl implements CredentialService {
 
@@ -26,8 +24,8 @@ public class CredentialServiceImpl implements CredentialService {
     }
 
     @Override
-    public Credential getCredential(String credentialId) {
-        return credentialDao.findByCredentialIdAndUser(credentialId, jwtContextManager.getAuthorizedUser());
+    public Credential getCredential(String CredentialName) {
+        return credentialDao.findByCredentialNameAndUser(CredentialName, jwtContextManager.getAuthorizedUser());
     }
 
     @Override
@@ -38,7 +36,7 @@ public class CredentialServiceImpl implements CredentialService {
 
     @Override
     public Credential updateCredential(Credential credential) {
-        Credential credentialToUpdate = credentialDao.findByCredentialIdAndUser(credential.getCredentialId(), jwtContextManager.getAuthorizedUser());
+        Credential credentialToUpdate = credentialDao.findByCredentialNameAndUser(credential.getCredentialName(), jwtContextManager.getAuthorizedUser());
         if (credentialToUpdate == null) return null;
         credentialToUpdate.setPassword(credential.getPassword());
         credentialToUpdate.setUrl(credential.getUrl());
@@ -47,8 +45,8 @@ public class CredentialServiceImpl implements CredentialService {
     }
 
     @Override
-    public Credential deleteCredential(String credentialId) {
-        Credential credentialToDelete = credentialDao.findByCredentialIdAndUser(credentialId, jwtContextManager.getAuthorizedUser());
+    public Credential deleteCredential(String CredentialName) {
+        Credential credentialToDelete = credentialDao.findByCredentialNameAndUser(CredentialName, jwtContextManager.getAuthorizedUser());
         if (credentialToDelete == null) return null;
         credentialDao.delete(credentialToDelete);
         return credentialToDelete;

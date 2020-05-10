@@ -85,13 +85,13 @@ class CredentialServiceImplTest {
 
         //then
         jwtContextManager.setUser(user1);
-        assertThat(credentialService.getCredential(credential4.getCredentialId())).isEqualTo(credential4);
+        assertThat(credentialService.getCredential(credential4.getCredentialName())).isEqualTo(credential4);
         jwtContextManager.setUser(user2);
-        assertThat(credentialService.getCredential(credential9.getCredentialId())).isEqualTo(credential9);
+        assertThat(credentialService.getCredential(credential9.getCredentialName())).isEqualTo(credential9);
     }
 
     @Test
-    void failureToCreateDuplicateCredentialId() {
+    void failureToCreateDuplicateCredentialName() {
         //when
         jwtContextManager.setUser(user1);
         Credential credential = credentialService.createCredential(credential5);
@@ -113,9 +113,9 @@ class CredentialServiceImplTest {
 
         //then
         jwtContextManager.setUser(user1);
-        assertThat(credentialService.getCredential(credential5.getCredentialId())).isEqualTo(credential5);
+        assertThat(credentialService.getCredential(credential5.getCredentialName())).isEqualTo(credential5);
         jwtContextManager.setUser(user2);
-        assertThat(credentialService.getCredential(credential10.getCredentialId())).isEqualTo(credential10);
+        assertThat(credentialService.getCredential(credential10.getCredentialName())).isEqualTo(credential10);
     }
 
     @Test
@@ -132,10 +132,10 @@ class CredentialServiceImplTest {
     void deleteCredential() {
         //when
         jwtContextManager.setUser(user1);
-        Credential credential = credentialService.deleteCredential(credential3.getCredentialId());
+        Credential credential = credentialService.deleteCredential(credential3.getCredentialName());
 
         //then
         assertThat(credential).isEqualTo(credential3);
-        assertThat(credentialService.getCredential(credential3.getCredentialId())).isNull();
+        assertThat(credentialService.getCredential(credential3.getCredentialName())).isNull();
     }
 }

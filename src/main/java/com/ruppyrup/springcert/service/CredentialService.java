@@ -7,11 +7,11 @@ import java.util.List;
 public interface CredentialService {
     List<Credential> getAllCredentials();
 
-    Credential getCredential(String credentialId);
+    Credential getCredential(String CredentialName);
 
     Credential createCredential(Credential credential);
 
     Credential updateCredential(Credential credential);
 
-    Credential deleteCredential(String credentialId);
+    Credential deleteCredential(String CredentialName);
 }
