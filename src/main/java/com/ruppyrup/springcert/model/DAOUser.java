@@ -1,4 +1,4 @@
-package com.ruppyrup.springcert.dao.impl;
+package com.ruppyrup.springcert.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "users")
+@Table(name = "${user.database.name}")
 public class DAOUser {
 
     @Id

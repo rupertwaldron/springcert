@@ -22,28 +22,35 @@ public class CredentialServiceImpl implements CredentialService {
 
     @Override
     public List<Credential> getAllCredentials() {
-        return credentialDao.getAllCredentials(jwtContextManager.getAuthorizedUser());
+        return credentialDao.findAllByUser(jwtContextManager.getAuthorizedUser());
     }
 
     @Override
     public Credential getCredential(String credentialId) {
-        return credentialDao.getCredential(credentialId, jwtContextManager.getAuthorizedUser());
+        return credentialDao.findByCredentialIdAndUser(credentialId, jwtContextManager.getAuthorizedUser());
     }
 
     @Override
     public Credential createCredential(Credential credential) {
         credential.setUser(jwtContextManager.getAuthorizedUser());
-        return credentialDao.create(credential);
+        return credentialDao.save(credential);
     }
 
     @Override
     public Credential updateCredential(Credential credential) {
-        credential.setUser(jwtContextManager.getAuthorizedUser());
-        return credentialDao.update(credential);
+        Credential credentialToUpdate = credentialDao.findByCredentialIdAndUser(credential.getCredentialId(), jwtContextManager.getAuthorizedUser());
+        if (credentialToUpdate == null) return null;
+        credentialToUpdate.setPassword(credential.getPassword());
+        credentialToUpdate.setUrl(credential.getUrl());
+        credentialToUpdate.setLogin(credential.getLogin());
+        return credentialDao.save(credentialToUpdate);
     }
 
     @Override
     public Credential deleteCredential(String credentialId) {
-        return credentialDao.delete(credentialId, jwtContextManager.getAuthorizedUser());
+        Credential credentialToDelete = credentialDao.findByCredentialIdAndUser(credentialId, jwtContextManager.getAuthorizedUser());
+        if (credentialToDelete == null) return null;
+        credentialDao.delete(credentialToDelete);
+        return credentialToDelete;
     }
 }

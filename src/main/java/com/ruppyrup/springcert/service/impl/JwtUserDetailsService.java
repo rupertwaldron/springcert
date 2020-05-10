@@ -1,9 +1,9 @@
 package com.ruppyrup.springcert.service.impl;
 
-import com.ruppyrup.springcert.dao.impl.DAOUser;
-import com.ruppyrup.springcert.exceptions.ExistingUserException;
-import com.ruppyrup.springcert.model.UserDTO;
 import com.ruppyrup.springcert.dao.UserDao;
+import com.ruppyrup.springcert.exceptions.ExistingUserException;
+import com.ruppyrup.springcert.model.DAOUser;
+import com.ruppyrup.springcert.model.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,10 +12,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 
-@Transactional
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
 

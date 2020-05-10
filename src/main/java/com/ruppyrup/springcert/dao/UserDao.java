@@ -1,6 +1,6 @@
 package com.ruppyrup.springcert.dao;
 
-import com.ruppyrup.springcert.dao.impl.DAOUser;
+import com.ruppyrup.springcert.model.DAOUser;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
