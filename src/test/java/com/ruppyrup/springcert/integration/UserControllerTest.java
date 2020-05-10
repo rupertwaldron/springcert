@@ -5,13 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import com.ruppyrup.springcert.exceptions.ExistingUserException;
 import com.ruppyrup.springcert.jwt.JwtTokenUtil;
-import com.ruppyrup.springcert.service.impl.JwtUserDetailsService;
 import com.ruppyrup.springcert.model.UserDTO;
+import com.ruppyrup.springcert.service.impl.JwtUserDetailsService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -45,11 +44,9 @@ class UserControllerTest {
     @Autowired
     private JwtUserDetailsService userDetailsService;
 
-    @Value("${jwt.username}")
-    private String username;
+    private String username = "test";
 
-    @Value("${jwt.pwd}")
-    private String password;
+    private String password = "test";
 
     private HttpHeaders headers;
     private UserDTO user = new UserDTO();

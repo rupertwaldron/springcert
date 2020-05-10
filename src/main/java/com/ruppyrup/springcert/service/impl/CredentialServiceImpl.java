@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CredentialServiceImpl implements CredentialService {
@@ -24,8 +25,8 @@ public class CredentialServiceImpl implements CredentialService {
     }
 
     @Override
-    public Credential getCredential(String CredentialName) {
-        return credentialDao.findByCredentialNameAndUser(CredentialName, jwtContextManager.getAuthorizedUser());
+    public Credential getCredential(Long id) {
+        return credentialDao.findById(id).orElse(null);
     }
 
     @Override
@@ -45,8 +46,8 @@ public class CredentialServiceImpl implements CredentialService {
     }
 
     @Override
-    public Credential deleteCredential(String CredentialName) {
-        Credential credentialToDelete = credentialDao.findByCredentialNameAndUser(CredentialName, jwtContextManager.getAuthorizedUser());
+    public Credential deleteCredential(Long id) {
+        Credential credentialToDelete = credentialDao.findById(id).orElse(null);
         if (credentialToDelete == null) return null;
         credentialDao.delete(credentialToDelete);
         return credentialToDelete;
