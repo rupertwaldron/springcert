@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import static com.ruppyrup.springcert.constants.Constants.hiddenParam;
-
 @Data
 @Entity
 @AllArgsConstructor
@@ -42,14 +40,14 @@ public class Credential {
         this.user = user;
     }
 
-    @Override
-    public String toString() {
-        return "Credential{" +
-                "CredentialName='" + credentialName + '\'' +
-                ", url='" + url + '\'' +
-                ", login='" + hiddenParam + '\'' +
-                ", password='" + hiddenParam + '\'' +
-                ", user='" + user + '\'' +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Credential{" +
+//                "CredentialName='" + credentialName + '\'' +
+//                ", url='" + url + '\'' +
+//                ", login='" + hiddenParam + '\'' +
+//                ", password='" + hiddenParam + '\'' +
+//                ", user='" + user + '\'' +
+//                '}';
+//    }
 }
