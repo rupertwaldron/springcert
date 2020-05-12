@@ -59,6 +59,8 @@ public class SpringController {
             updatedCredential = credentialService.updateCredential(credential);
         } catch (CredentialNotFoundException e) {
             status = HttpStatus.NOT_FOUND;
+        } catch (RequestMadeByNonOwner re) {
+            status = HttpStatus.UNAUTHORIZED;
         }
         return ResponseEntity
                 .status(status)
@@ -73,10 +75,13 @@ public class SpringController {
             deletedCredential = credentialService.deleteCredential(id);
         } catch (CredentialNotFoundException e) {
             status = HttpStatus.NOT_FOUND;
+        } catch (RequestMadeByNonOwner re) {
+            status = HttpStatus.UNAUTHORIZED;
         }
         return ResponseEntity
                 .status(status)
                 .body(deletedCredential);
     }
+
 
 }

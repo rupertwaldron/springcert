@@ -27,8 +27,7 @@ public class CredentialServiceImpl implements CredentialService {
 
     @Override
     public Credential getCredential(Long id) throws CredentialNotFoundException, RequestMadeByNonOwner {
-        Credential foundCredential = credentialDao.findById(id).orElseThrow(CredentialNotFoundException::new);
-        if (!foundCredential.getUser().equals(jwtContextManager.getAuthorizedUser())) throw new RequestMadeByNonOwner();
+        Credential foundCredential = getAuthorizedCredential(id);
         return foundCredential;
     }
 
@@ -39,8 +38,8 @@ public class CredentialServiceImpl implements CredentialService {
     }
 
     @Override
-    public Credential updateCredential(Credential credential) throws CredentialNotFoundException {
-        Credential credentialToUpdate = credentialDao.findById(credential.getId()).orElseThrow(CredentialNotFoundException::new);
+    public Credential updateCredential(Credential credential) throws CredentialNotFoundException, RequestMadeByNonOwner {
+        Credential credentialToUpdate = getAuthorizedCredential(credential.getId());
         credentialToUpdate.setCredentialName(credential.getCredentialName());
         credentialToUpdate.setPassword(credential.getPassword());
         credentialToUpdate.setUrl(credential.getUrl());
@@ -49,10 +48,17 @@ public class CredentialServiceImpl implements CredentialService {
     }
 
     @Override
-    public Credential deleteCredential(Long id) throws CredentialNotFoundException {
-        Credential credentialToDelete = credentialDao.findById(id).orElseThrow(CredentialNotFoundException::new);;
+    public Credential deleteCredential(Long id) throws CredentialNotFoundException, RequestMadeByNonOwner {
+        Credential credentialToDelete = getAuthorizedCredential(id);
         if (credentialToDelete == null) return null;
         credentialDao.delete(credentialToDelete);
         return credentialToDelete;
+    }
+
+    private Credential getAuthorizedCredential(Long id) throws CredentialNotFoundException, RequestMadeByNonOwner {
+        Credential credentialToUpdate = credentialDao.findById(id).orElseThrow(CredentialNotFoundException::new);
+        if (!credentialToUpdate.getUser().equals(jwtContextManager.getAuthorizedUser()))
+            throw new RequestMadeByNonOwner();
+        return credentialToUpdate;
     }
 }

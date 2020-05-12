@@ -13,7 +13,7 @@ public interface CredentialService {
 
     Credential createCredential(Credential credential);
 
-    Credential updateCredential(Credential credential) throws CredentialNotFoundException;
+    Credential updateCredential(Credential credential) throws CredentialNotFoundException, RequestMadeByNonOwner;
 
-    Credential deleteCredential(Long id) throws CredentialNotFoundException;
+    Credential deleteCredential(Long id) throws CredentialNotFoundException, RequestMadeByNonOwner;
 }

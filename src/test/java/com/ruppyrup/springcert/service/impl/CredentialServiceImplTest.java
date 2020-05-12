@@ -37,6 +37,7 @@ class CredentialServiceImplTest {
     private Credential credential10;
     private String user1;
     private String user2;
+    private String user3;
 
     @Autowired
     CredentialService credentialService;
@@ -48,6 +49,7 @@ class CredentialServiceImplTest {
     void setUp() {
         user1 = "javainuse";
         user2 = "ruppyrup";
+        user3 = "bob";
         credential1 = new Credential(2L,"Amazon", "www.amazon.com", "pete", "football", user1);
         credential2 = new Credential(1L,"PondPlanet", "www.pondplanet.com", "ruppyrup", "feelsick", user1);
         credential3 = new Credential(3L, "John Lewis", "www.johnlewis.com", "rupert.waldron@yahoo.co.uk", "polly", user1);
@@ -122,7 +124,7 @@ class CredentialServiceImplTest {
     }
 
     @Test
-    void deleteCredential() throws CredentialNotFoundException {
+    void deleteCredential() throws CredentialNotFoundException, RequestMadeByNonOwner {
         //when
         jwtContextManager.setUser(user1);
         Credential credential = credentialService.deleteCredential(credential3.getId());
@@ -139,5 +141,30 @@ class CredentialServiceImplTest {
 
         jwtContextManager.setUser(user1);
         assertThrows(RequestMadeByNonOwner.class, () -> credentialService.getCredential(credential7.getId()));
+    }
+
+    @Test
+    void getAllCredentials_shouldReturnNothingForInvalidUser() {
+        jwtContextManager.setUser(user3);
+        List<String> credentialNames1 = credentialService.getAllCredentials().stream().map(Credential::getCredentialName).collect(Collectors.toList());
+        assertThat(credentialNames1).isEmpty();
+    }
+
+    @Test
+    void updateCredential_shouldFailIfUserNotMatchCredentialUser() {
+        //when
+        jwtContextManager.setUser(user1);
+
+        //then
+        assertThrows(RequestMadeByNonOwner.class, () -> credentialService.updateCredential(credential7));
+    }
+
+    @Test
+    void deleteCredential_shouldFailIfUserNotMatchCredentialUser() {
+        //when
+        jwtContextManager.setUser(user1);
+
+        //then
+        assertThrows(RequestMadeByNonOwner.class, () -> credentialService.deleteCredential(credential7.getId()));
     }
 }
