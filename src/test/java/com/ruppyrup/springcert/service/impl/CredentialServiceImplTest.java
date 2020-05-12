@@ -1,6 +1,7 @@
 package com.ruppyrup.springcert.service.impl;
 
 import com.ruppyrup.springcert.config.JwtContextManagerTestImpl;
+import com.ruppyrup.springcert.dao.CredentialDao;
 import com.ruppyrup.springcert.exceptions.CredentialNotFoundException;
 import com.ruppyrup.springcert.exceptions.RequestMadeByNonOwner;
 import com.ruppyrup.springcert.model.Credential;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,23 +21,23 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DirtiesContext
 @SpringBootTest
-@Sql({"/test-schema-mysql.sql"})
+//@Sql({"/test-schema-mysql.sql"})
 @ActiveProfiles("test")
 class CredentialServiceImplTest {
 
-    private Credential credential1;
-    private Credential credential2;
-    private Credential credential3;
-    private Credential credential4;
-    private Credential credential5;
-    private Credential credential6;
-    private Credential credential7;
-    private Credential credential8;
-    private Credential credential9;
-    private Credential credential10;
-    private String user1;
-    private String user2;
-    private String user3;
+    private String user1 = "javainuse";
+    private String user2 = "ruppyrup";
+    private String user3 = "bob";
+    private Credential credential1 = new Credential(1L, "Amazon", "www.amazon.com", "pete", "football", user1);
+    private Credential credential2 = new Credential(2L,"PondPlanet", "www.pondplanet.com", "ruppyrup", "feelsick", user1);
+    private Credential credential3 = new Credential(3L, "John Lewis", "www.johnlewis.com", "rupert.waldron@yahoo.co.uk", "polly", user1);
+    private Credential credential4 = new Credential(6L, "Tops tiles", "www.topstiles.com", "rupert.waldron@yahoo.co.uk", "tilly", "");
+    private Credential credential5 = new Credential(1L, "PondPlanet", "www.pondplanet2.com", "Lee", "monster", user1);
+    private Credential credential6 = new Credential(8L, "Pratts Pods", "www.pp.com", "Simon", "gobsmack", user1);
+    private Credential credential7 = new Credential(4L, "Amazon", "www.amazon.com", "rupert", "sweetpea", user2);
+    private Credential credential8 = new Credential(5L,"John Lewis", "www.johnlewis.com", "ruppyruyp@yahoo.co.uk", "deadsea", user2);
+    private Credential credential9 = new Credential(7L, "John Lewis2", "www.johnlewis2.com", "ruppyruyp2@yahoo.co.uk", "deadsea2", "");
+    private Credential credential10 = new Credential(3L, "John Lewis", "www.HouseofFraser.com", "ruppyruyp@yahoo.co.uk", "deadsea", user1);
 
     @Autowired
     CredentialService credentialService;
@@ -45,21 +45,17 @@ class CredentialServiceImplTest {
     @Autowired
     JwtContextManagerTestImpl jwtContextManager;
 
+    @Autowired
+    CredentialDao credentialDao;
+
     @BeforeEach
     void setUp() {
-        user1 = "javainuse";
-        user2 = "ruppyrup";
-        user3 = "bob";
-        credential1 = new Credential(2L,"Amazon", "www.amazon.com", "pete", "football", user1);
-        credential2 = new Credential(1L,"PondPlanet", "www.pondplanet.com", "ruppyrup", "feelsick", user1);
-        credential3 = new Credential(3L, "John Lewis", "www.johnlewis.com", "rupert.waldron@yahoo.co.uk", "polly", user1);
-        credential4 = new Credential(6L, "Tops tiles", "www.topstiles.com", "rupert.waldron@yahoo.co.uk", "tilly", "");
-        credential5 = new Credential(1L, "PondPlanet", "www.pondplanet2.com", "Lee", "monster", user1);
-        credential6 = new Credential(8L, "Pratts Pods", "www.pp.com", "Simon", "gobsmack", user1);
-        credential7 = new Credential(4L, "Amazon", "www.amazon.com", "rupert", "sweetpea", user2);
-        credential8 = new Credential(5L,"John Lewis", "www.johnlewis.com", "ruppyruyp@yahoo.co.uk", "deadsea", user2);
-        credential9 = new Credential(7L, "John Lewis2", "www.johnlewis2.com", "ruppyruyp2@yahoo.co.uk", "deadsea2", "");
-        credential10 = new Credential(3L, "John Lewis", "www.HouseofFraser.com", "ruppyruyp@yahoo.co.uk", "deadsea", user1);
+        credentialDao.save(credential1);
+        credentialDao.save(credential2);
+        credentialDao.save(credential3);
+        credentialDao.save(credential7);
+        credentialDao.save(credential8);
+        credentialDao.findAll().forEach(System.out::println);
     }
 
     @Test
