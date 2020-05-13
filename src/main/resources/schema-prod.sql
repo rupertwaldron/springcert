@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS credentials;
 
 CREATE TABLE IF NOT EXISTS credentials (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid VARCHAR(5) NOT NULL,
   credential_name VARCHAR(40) NOT NULL,
   url VARCHAR(200) NOT NULL,
   login VARCHAR(100) NOT NULL,
@@ -13,7 +14,7 @@ CREATE TABLE IF NOT EXISTS credentials (
 -- INSERT INTO credentials(credential_name,url,login,password,user)values("Amazon", "www.amazon.com", "pete", "football", "rup");
 -- INSERT INTO credentials(credential_name,url,login,password,user)values("John Lewis", "www.johnlewis.com", "rupert.waldron@yahoo.co.uk", "polly", "rup");
 
-DROP TABLE IF EXISTS users;
+-- DROP TABLE IF EXISTS users;
 
 CREATE TABLE IF NOT EXISTS users (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,

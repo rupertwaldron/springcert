@@ -19,7 +19,6 @@ import org.springframework.http.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +27,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DirtiesContext
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@Sql({"/test-schema-mysql.sql"})
-@ActiveProfiles("integration")
+//@Sql({"/test-schema-mysql.sql"})
+@ActiveProfiles("test")
 class UserControllerTest {
 
     @LocalServerPort
