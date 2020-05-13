@@ -10,11 +10,11 @@ CREATE TABLE IF NOT EXISTS credentials (
   user VARCHAR(40) NOT NULL
 );
 
--- INSERT INTO credentials(credential_name,url,login,password,user)values("PondPlanet", "www.pondplanet.com", "ruppyrup", "feelsick", "ruppyrup");
--- INSERT INTO credentials(credential_name,url,login,password,user)values("Amazon", "www.amazon.com", "pete", "football", "rup");
--- INSERT INTO credentials(credential_name,url,login,password,user)values("John Lewis", "www.johnlewis.com", "rupert.waldron@yahoo.co.uk", "polly", "rup");
+INSERT INTO credentials(uuid,credential_name,url,login,password,user)values("a","PondPlanet", "www.pondplanet.com", "ruppyrup", "prod", "ruppyrup");
+INSERT INTO credentials(uuid,credential_name,url,login,password,user)values("b","Amazon", "www.amazon.com", "pete", "prod", "rup");
+INSERT INTO credentials(uuid,credential_name,url,login,password,user)values("c","John Lewis", "www.johnlewis.com", "rupert.waldron@yahoo.co.uk", "prod", "rup");
 
--- DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS users;
 
 CREATE TABLE IF NOT EXISTS users (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -22,5 +22,5 @@ CREATE TABLE IF NOT EXISTS users (
   password VARCHAR(200) NOT NULL
 );
 
--- INSERT INTO users(username, password)values("ruppyrup", "$2a$10$5/h7AMLixGPBNbHxpUqnYO9KqQkXxo452QZICiK6b/zLw77KMK61C");
--- INSERT INTO users(username, password)values("rup", "$2a$10$d.pL4SZ1KC3DdZUF1toF4.OiT7arGEf91cOstJtsy8ql2Duns2wpa");
+INSERT INTO users(username, password)values("ruppyrup", "$2a$10$5/h7AMLixGPBNbHxpUqnYO9KqQkXxo452QZICiK6b/zLw77KMK61C");
+INSERT INTO users(username, password)values("rup", "$2a$10$d.pL4SZ1KC3DdZUF1toF4.OiT7arGEf91cOstJtsy8ql2Duns2wpa");
