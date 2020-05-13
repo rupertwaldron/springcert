@@ -24,12 +24,12 @@ public class SpringController {
         return new ResponseEntity<>(credentialService.getAllCredentials(), HttpStatus.OK);
     }
 
-    @GetMapping("/credentials/{id}")
-    public ResponseEntity<Credential> findCredential(@PathVariable Long id) {
+    @GetMapping("/credentials/{uuid}")
+    public ResponseEntity<Credential> findCredential(@PathVariable String uuid) {
         HttpStatus status = HttpStatus.OK;
         Credential credential = null;
         try {
-            credential = credentialService.getCredential(id);
+            credential = credentialService.getCredential(uuid);
         } catch (CredentialNotFoundException e) {
             status = HttpStatus.NOT_FOUND;
         } catch (RequestMadeByNonOwner re) {
@@ -43,16 +43,16 @@ public class SpringController {
     @PostMapping("/credentials")
     public ResponseEntity<Credential> createCredential(@RequestBody Credential credential) {
         Credential createdCredential = credentialService.createCredential(credential);
-        HttpStatus status = HttpStatus.OK;
+        HttpStatus status = HttpStatus.CREATED;
         if (createdCredential == null) status = HttpStatus.CONFLICT;
         return ResponseEntity
                 .status(status)
                 .body(credential);
     }
 
-    @PutMapping("/credentials/{id}")
-    public ResponseEntity<Credential> updateCredential(@PathVariable Long id, @RequestBody Credential credential) {
-        credential.setId(id);
+    @PutMapping("/credentials/{uuid}")
+    public ResponseEntity<Credential> updateCredential(@PathVariable String uuid, @RequestBody Credential credential) {
+        credential.setUuid(uuid);
         HttpStatus status = HttpStatus.OK;
         Credential updatedCredential = null;
         try {
@@ -67,12 +67,12 @@ public class SpringController {
                 .body(updatedCredential);
     }
 
-    @DeleteMapping("/credentials/{id}")
-    public ResponseEntity<Credential>  deleteCredential(@PathVariable Long id) {
+    @DeleteMapping("/credentials/{uuid}")
+    public ResponseEntity<Credential>  deleteCredential(@PathVariable String uuid) {
         HttpStatus status = HttpStatus.OK;
         Credential deletedCredential = null;
         try {
-            deletedCredential = credentialService.deleteCredential(id);
+            deletedCredential = credentialService.deleteCredential(uuid);
         } catch (CredentialNotFoundException e) {
             status = HttpStatus.NOT_FOUND;
         } catch (RequestMadeByNonOwner re) {

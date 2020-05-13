@@ -9,11 +9,11 @@ import java.util.List;
 public interface CredentialService {
     List<Credential> getAllCredentials();
 
-    Credential getCredential(Long id) throws CredentialNotFoundException, RequestMadeByNonOwner;
+    Credential getCredential(String uuid) throws CredentialNotFoundException, RequestMadeByNonOwner;
 
     Credential createCredential(Credential credential);
 
     Credential updateCredential(Credential credential) throws CredentialNotFoundException, RequestMadeByNonOwner;
 
-    Credential deleteCredential(Long id) throws CredentialNotFoundException, RequestMadeByNonOwner;
+    Credential deleteCredential(String uuid) throws CredentialNotFoundException, RequestMadeByNonOwner;
 }
