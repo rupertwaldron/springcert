@@ -1,18 +1,18 @@
 DROP TABLE IF EXISTS credentials;
 
--- CREATE TABLE IF NOT EXISTS credentials (
---   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
---   uuid UNIQUEIDENTIFIER default NEWID(),
---   credential_name VARCHAR(40) NOT NULL,
---   url VARCHAR(200) NOT NULL,
---   login VARCHAR(100) NOT NULL,
---   password VARCHAR(100) NOT NULL,
---   user VARCHAR(40) NOT NULL
--- );
---
--- INSERT INTO credentials(credential_name,url,login,password,user)values(default,"PondPlanet", "www.pondplanet.com", "ruppyrup", "feelsick", "ruppyrup");
--- INSERT INTO credentials(credential_name,url,login,password,user)values(default,"Amazon", "www.amazon.com", "pete", "football", "rup");
--- INSERT INTO credentials(credential_name,url,login,password,user)values(default,"John Lewis", "www.johnlewis.com", "rupert.waldron@yahoo.co.uk", "polly", "rup");
+CREATE TABLE IF NOT EXISTS credentials (
+  id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid VARCHAR(5) NOT NULL,
+  credential_name VARCHAR(40) NOT NULL,
+  url VARCHAR(200) NOT NULL,
+  login VARCHAR(100) NOT NULL,
+  password VARCHAR(100) NOT NULL,
+  user VARCHAR(40) NOT NULL
+);
+
+INSERT INTO credentials(uuid,credential_name,url,login,password,user)values("a","PondPlanet", "www.pondplanet.com", "ruppyrup", "prod", "ruppyrup");
+INSERT INTO credentials(uuid,credential_name,url,login,password,user)values("b","Amazon", "www.amazon.com", "pete", "prod", "rup");
+INSERT INTO credentials(uuid,credential_name,url,login,password,user)values("c","John Lewis", "www.johnlewis.com", "rupert.waldron@yahoo.co.uk", "prod", "rup");
 
 DROP TABLE IF EXISTS users;
 
