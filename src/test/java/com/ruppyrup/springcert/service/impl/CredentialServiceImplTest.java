@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DirtiesContext
 @SpringBootTest
-//@Sql({"/test-schema-mysql.sql"})
 @ActiveProfiles("test")
 class CredentialServiceImplTest {
 

@@ -4,7 +4,6 @@ import com.ruppyrup.springcert.exceptions.CredentialNotFoundException;
 import com.ruppyrup.springcert.exceptions.RequestMadeByNonOwner;
 import com.ruppyrup.springcert.model.Credential;
 import com.ruppyrup.springcert.service.CredentialService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Slf4j
+
 @RestController
 public class SpringController {
 
@@ -22,6 +21,12 @@ public class SpringController {
     @GetMapping("/credentials")
     public ResponseEntity<List<Credential>> getAllCredentials() {
         return new ResponseEntity<>(credentialService.getAllCredentials(), HttpStatus.OK);
+    }
+
+    @GetMapping("/")
+    @ResponseBody
+    public String sayHello() {
+        return "Hello from credentials";
     }
 
     @GetMapping("/credentials/{uuid}")

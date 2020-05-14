@@ -27,7 +27,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DirtiesContext
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-//@Sql({"/test-schema-mysql.sql"})
 @ActiveProfiles("test")
 class UserControllerTest {
 
