@@ -5,6 +5,7 @@ import com.ruppyrup.springcert.dao.CredentialDao;
 import com.ruppyrup.springcert.exceptions.CredentialNotFoundException;
 import com.ruppyrup.springcert.exceptions.RequestMadeByNonOwner;
 import com.ruppyrup.springcert.model.Credential;
+import com.ruppyrup.springcert.model.CredentialDTO;
 import com.ruppyrup.springcert.service.CredentialService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,15 +29,22 @@ class CredentialServiceImplTest {
     private String user1 = "javainuse";
     private String user2 = "ruppyrup";
     private String user3 = "bob";
-    private Credential amazonUser1 = new Credential( "Amazon", "www.amazon.com", "pete", "football", user1);
-    private Credential pondUser1 = new Credential("PondPlanet", "www.pondplanet.com", "ruppyrup", "feelsick", user1);
-    private Credential jlUser1 = new Credential("John Lewis", "www.johnlewis.com", "rupert.waldron@yahoo.co.uk", "polly", user1);
-    private Credential tt = new Credential("Tops tiles", "www.topstiles.com", "rupert.waldron@yahoo.co.uk", "tilly", "");
-    private Credential pp2User1 = new Credential("PondPlanet", "www.pondplanet2.com", "Lee", "monster", user1);
-    private Credential prattUser1 = new Credential("Pratts Pods", "www.pp.com", "Simon", "gobsmack", user1);
-    private Credential amazonUser2 = new Credential("Amazon", "www.amazon.com", "rupert", "sweetpea", user2);
-    private Credential jlUser2 = new Credential("John Lewis", "www.johnlewis.com", "ruppyruyp@yahoo.co.uk", "deadsea", user2);
-    private Credential jl = new Credential("John Lewis2", "www.johnlewis2.com", "ruppyruyp2@yahoo.co.uk", "deadsea2", "");
+    private CredentialDTO amazonUser1DTO = new CredentialDTO( "Amazon", "www.amazon.com", "pete", "football");
+    private CredentialDTO pondUser1DTO = new CredentialDTO("PondPlanet", "www.pondplanet.com", "ruppyrup", "feelsick");
+    private CredentialDTO jlUser1DTO = new CredentialDTO("John Lewis", "www.johnlewis.com", "rupert.waldron@yahoo.co.uk", "polly");
+    private CredentialDTO ttDTO = new CredentialDTO("Tops tiles", "www.topstiles.com", "rupert.waldron@yahoo.co.uk", "tilly");
+    private CredentialDTO pp2User1DTO = new CredentialDTO("PondPlanet", "www.pondplanet2.com", "Lee", "monster");
+    private CredentialDTO prattUser1DTO = new CredentialDTO("Pratts Pods", "www.pp.com", "Simon", "gobsmack");
+    private CredentialDTO amazonUser2DTO = new CredentialDTO("Amazon", "www.amazon.com", "rupert", "sweetpea");
+    private CredentialDTO jlUser2DTO = new CredentialDTO("John Lewis", "www.johnlewis.com", "ruppyruyp@yahoo.co.uk", "deadsea");
+    private CredentialDTO jlDTO = new CredentialDTO("John Lewis2", "www.johnlewis2.com", "ruppyruyp2@yahoo.co.uk", "deadsea2");
+
+    private Credential amazonUser1;
+    private Credential pondUser1;
+    private Credential jlUser1;
+    private Credential amazonUser2;
+    private Credential jlUser2;
+
 
     @Autowired
     CredentialService credentialService;
@@ -49,12 +57,15 @@ class CredentialServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        credentialDao.save(amazonUser1);
-        credentialDao.save(pondUser1);
-        credentialDao.save(jlUser1);
-        credentialDao.save(amazonUser2);
-        credentialDao.save(jlUser2);
-        credentialDao.findAll().forEach(System.out::println);
+
+        jwtContextManager.setUser(user1);
+        amazonUser1 = credentialService.createCredential(amazonUser1DTO);
+        pondUser1 = credentialService.createCredential(pondUser1DTO);
+        jlUser1 = credentialService.createCredential(jlUser1DTO);
+        jwtContextManager.setUser(user2);
+        amazonUser2 = credentialService.createCredential(amazonUser2DTO);
+        jlUser2 = credentialService.createCredential(jlUser2DTO);
+        credentialService.getAllCredentials().forEach(System.out::println);
     }
 
     @AfterEach
@@ -86,28 +97,26 @@ class CredentialServiceImplTest {
     void createCredential() throws Exception {
         //when
         jwtContextManager.setUser(user1);
-        Credential created1 = credentialService.createCredential(tt);
+        Credential created1 = credentialService.createCredential(ttDTO);
 
         jwtContextManager.setUser(user2);
-        Credential created2 = credentialService.createCredential(jl);
+        Credential created2 = credentialService.createCredential(jlDTO);
 
         //then
         jwtContextManager.setUser(user1);
-        assertThat(credentialService.getCredential(created1.getUuid())).isEqualTo(tt);
+        assertThat(new CredentialDTO(credentialService.getCredential(created1.getUuid()))).isEqualTo(ttDTO);
         jwtContextManager.setUser(user2);
-        assertThat(credentialService.getCredential(created2.getUuid())).isEqualTo(jl);
+        assertThat(new CredentialDTO(credentialService.getCredential(created2.getUuid()))).isEqualTo(jlDTO);
     }
 
     @Test
     void updateCredential() throws Exception {
         //when
         jwtContextManager.setUser(user1);
-        pp2User1.setUuid(pondUser1.getUuid());
-        pp2User1.setId(pondUser1.getId());
-        Credential updated1 = credentialService.updateCredential(pp2User1);
+        Credential updated1 = credentialService.updateCredential(pondUser1.getUuid(), pp2User1DTO);
 
         //then
-        assertThat(updated1).isEqualTo(pp2User1);
+        assertThat(new CredentialDTO(updated1)).isEqualTo(pp2User1DTO);
     }
 
     @Test
@@ -116,7 +125,7 @@ class CredentialServiceImplTest {
         jwtContextManager.setUser(user1);
 
         //then
-        assertThrows(CredentialNotFoundException.class, () -> credentialService.updateCredential(prattUser1));
+        assertThrows(CredentialNotFoundException.class, () -> credentialService.updateCredential("a", prattUser1DTO));
     }
 
     @Test
@@ -127,7 +136,7 @@ class CredentialServiceImplTest {
 
         //then
         assertThat(credential).isEqualTo(jlUser1);
-        assertThrows(CredentialNotFoundException.class, () -> credentialService.updateCredential(jlUser1));
+        assertThrows(CredentialNotFoundException.class, () -> credentialService.updateCredential(jlUser1.getUuid(), jlUser1DTO));
     }
 
     @Test
@@ -152,7 +161,7 @@ class CredentialServiceImplTest {
         jwtContextManager.setUser(user1);
 
         //then
-        assertThrows(RequestMadeByNonOwner.class, () -> credentialService.updateCredential(amazonUser2));
+        assertThrows(RequestMadeByNonOwner.class, () -> credentialService.updateCredential(amazonUser2.getUuid(), amazonUser2DTO));
     }
 
     @Test

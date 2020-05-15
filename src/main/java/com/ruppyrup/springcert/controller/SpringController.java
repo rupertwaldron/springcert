@@ -3,12 +3,14 @@ package com.ruppyrup.springcert.controller;
 import com.ruppyrup.springcert.exceptions.CredentialNotFoundException;
 import com.ruppyrup.springcert.exceptions.RequestMadeByNonOwner;
 import com.ruppyrup.springcert.model.Credential;
+import com.ruppyrup.springcert.model.CredentialDTO;
 import com.ruppyrup.springcert.service.CredentialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -46,22 +48,21 @@ public class SpringController {
     }
 
     @PostMapping("/credentials")
-    public ResponseEntity<Credential> createCredential(@RequestBody Credential credential) {
-        Credential createdCredential = credentialService.createCredential(credential);
+    public ResponseEntity<Credential> createCredential(@RequestBody @Valid CredentialDTO credentialDTO) {
+        Credential createdCredential = credentialService.createCredential(credentialDTO);
         HttpStatus status = HttpStatus.CREATED;
         if (createdCredential == null) status = HttpStatus.CONFLICT;
         return ResponseEntity
                 .status(status)
-                .body(credential);
+                .body(createdCredential);
     }
 
     @PutMapping("/credentials/{uuid}")
-    public ResponseEntity<Credential> updateCredential(@PathVariable String uuid, @RequestBody Credential credential) {
-        credential.setUuid(uuid);
+    public ResponseEntity<Credential> updateCredential(@PathVariable String uuid, @RequestBody CredentialDTO credentialDTO) {
         HttpStatus status = HttpStatus.OK;
         Credential updatedCredential = null;
         try {
-            updatedCredential = credentialService.updateCredential(credential);
+            updatedCredential = credentialService.updateCredential(uuid, credentialDTO);
         } catch (CredentialNotFoundException e) {
             status = HttpStatus.NOT_FOUND;
         } catch (RequestMadeByNonOwner re) {

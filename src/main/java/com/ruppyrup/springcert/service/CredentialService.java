@@ -3,6 +3,7 @@ package com.ruppyrup.springcert.service;
 import com.ruppyrup.springcert.exceptions.CredentialNotFoundException;
 import com.ruppyrup.springcert.exceptions.RequestMadeByNonOwner;
 import com.ruppyrup.springcert.model.Credential;
+import com.ruppyrup.springcert.model.CredentialDTO;
 
 import java.util.List;
 
@@ -11,9 +12,9 @@ public interface CredentialService {
 
     Credential getCredential(String uuid) throws CredentialNotFoundException, RequestMadeByNonOwner;
 
-    Credential createCredential(Credential credential);
+    Credential createCredential(CredentialDTO credential);
 
-    Credential updateCredential(Credential credential) throws CredentialNotFoundException, RequestMadeByNonOwner;
+    Credential updateCredential(String uuid, CredentialDTO credential) throws CredentialNotFoundException, RequestMadeByNonOwner;
 
     Credential deleteCredential(String uuid) throws CredentialNotFoundException, RequestMadeByNonOwner;
 }

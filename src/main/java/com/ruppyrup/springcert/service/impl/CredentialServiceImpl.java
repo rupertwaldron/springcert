@@ -5,6 +5,7 @@ import com.ruppyrup.springcert.exceptions.CredentialNotFoundException;
 import com.ruppyrup.springcert.exceptions.RequestMadeByNonOwner;
 import com.ruppyrup.springcert.jwt.JwtContextManager;
 import com.ruppyrup.springcert.model.Credential;
+import com.ruppyrup.springcert.model.CredentialDTO;
 import com.ruppyrup.springcert.service.CredentialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,18 +33,19 @@ public class CredentialServiceImpl implements CredentialService {
     }
 
     @Override
-    public Credential createCredential(Credential credential) {
+    public Credential createCredential(CredentialDTO credentialDto) {
+        Credential credential = new Credential(credentialDto);
         credential.setUser(jwtContextManager.getAuthorizedUser());
         return credentialDao.save(credential);
     }
 
     @Override
-    public Credential updateCredential(Credential credential) throws CredentialNotFoundException, RequestMadeByNonOwner {
-        Credential credentialToUpdate = getAuthorizedCredential(credential.getUuid());
-        credentialToUpdate.setCredentialName(credential.getCredentialName());
-        credentialToUpdate.setPassword(credential.getPassword());
-        credentialToUpdate.setUrl(credential.getUrl());
-        credentialToUpdate.setLogin(credential.getLogin());
+    public Credential updateCredential(String uuid, CredentialDTO credentialDTO) throws CredentialNotFoundException, RequestMadeByNonOwner {
+        Credential credentialToUpdate = getAuthorizedCredential(uuid);
+        credentialToUpdate.setUrl(credentialDTO.getUrl());
+        credentialToUpdate.setLogin(credentialDTO.getLogin());
+        credentialToUpdate.setCredentialName(credentialDTO.getCredentialName());
+        credentialToUpdate.setPassword(credentialDTO.getPassword());
         return credentialDao.save(credentialToUpdate);
     }
 

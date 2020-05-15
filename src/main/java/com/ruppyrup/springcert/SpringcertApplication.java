@@ -11,5 +11,4 @@ public class SpringcertApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SpringcertApplication.class, args);
 	}
-
 }

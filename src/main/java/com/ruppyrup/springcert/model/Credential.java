@@ -1,8 +1,13 @@
 package com.ruppyrup.springcert.model;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 import javax.persistence.*;
 import java.util.UUID;
 
+@ToString
+@EqualsAndHashCode
 @Entity
 @Table(name = "credentials")
 public class Credential {
@@ -12,7 +17,7 @@ public class Credential {
     private Long id;
 
     @Column
-    private String uuid;
+    private String uuid= UUID.randomUUID().toString();
 
     @Column
     private String credentialName;
@@ -32,13 +37,11 @@ public class Credential {
     public Credential() {
     }
 
-    public Credential(String credentialName, String url, String login, String password, String user) {
-        this.uuid = UUID.randomUUID().toString();
-        this.credentialName = credentialName;
-        this.url = url;
-        this.login = login;
-        this.password = password;
-        this.user = user;
+    public Credential(CredentialDTO credentialDTO) {
+        this.credentialName = credentialDTO.getCredentialName();
+        this.url = credentialDTO.getUrl();
+        this.login = credentialDTO.getLogin();
+        this.password = credentialDTO.getPassword();
     }
 
     public Credential(Long id, String uuid, String credentialName, String url, String login, String password, String user) {
@@ -106,32 +109,5 @@ public class Credential {
 
     public void setUser(String user) {
         this.user = user;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Credential that = (Credential) o;
-
-        if (uuid != null ? !uuid.equals(that.uuid) : that.uuid != null) return false;
-        if (credentialName != null ? !credentialName.equals(that.credentialName) : that.credentialName != null)
-            return false;
-        if (url != null ? !url.equals(that.url) : that.url != null) return false;
-        if (login != null ? !login.equals(that.login) : that.login != null) return false;
-        if (password != null ? !password.equals(that.password) : that.password != null) return false;
-        return user != null ? user.equals(that.user) : that.user == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = uuid != null ? uuid.hashCode() : 0;
-        result = 31 * result + (credentialName != null ? credentialName.hashCode() : 0);
-        result = 31 * result + (url != null ? url.hashCode() : 0);
-        result = 31 * result + (login != null ? login.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (user != null ? user.hashCode() : 0);
-        return result;
     }
 }
