@@ -3,19 +3,19 @@ package com.ruppyrup.springcert.model;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 @ToString
 @EqualsAndHashCode
 public class CredentialDTO {
 
-    @NotNull
+    @NotBlank(message = "credentialName can't be empty")
     private String credentialName;
-    @NotNull
+    @NotBlank(message = "url can't be empty")
     private String url;
-    @NotNull
+    @NotBlank(message = "login can't be empty")
     private String login;
-    @NotNull
+    @NotBlank(message = "password can't be empty")
     private String password;
 
     public CredentialDTO() {
@@ -66,7 +66,5 @@ public class CredentialDTO {
     public void setPassword(String password) {
         this.password = password;
     }
-
-
 
 }

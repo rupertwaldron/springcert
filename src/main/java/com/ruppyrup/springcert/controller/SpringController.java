@@ -25,7 +25,7 @@ public class SpringController {
         return new ResponseEntity<>(credentialService.getAllCredentials(), HttpStatus.OK);
     }
 
-    @GetMapping("/")
+    @GetMapping("/hello")
     @ResponseBody
     public String sayHello() {
         return "Hello from credentials";
