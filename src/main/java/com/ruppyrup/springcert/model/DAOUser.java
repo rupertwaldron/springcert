@@ -22,6 +22,11 @@ public class DAOUser {
     public DAOUser() {
     }
 
+    public DAOUser(UserDTO userDTO) {
+        this.username = userDTO.getUsername();
+        this.password = userDTO.getPassword();
+    }
+
     public DAOUser(String username, String password) {
         this.username = username;
         this.password = password;

@@ -3,8 +3,10 @@ package com.ruppyrup.springcert.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
+import com.ruppyrup.springcert.dao.UserDao;
 import com.ruppyrup.springcert.exceptions.ExistingUserException;
 import com.ruppyrup.springcert.jwt.JwtTokenUtil;
+import com.ruppyrup.springcert.model.DAOUser;
 import com.ruppyrup.springcert.model.UserDTO;
 import com.ruppyrup.springcert.service.impl.JwtUserDetailsService;
 import org.junit.jupiter.api.AfterEach;
@@ -42,6 +44,9 @@ class UserControllerTest {
     @Autowired
     private JwtUserDetailsService userDetailsService;
 
+    @Autowired
+    private UserDao userDao;
+
     private String username = "test";
 
     private String password = "test";
@@ -63,7 +68,8 @@ class UserControllerTest {
 
     @AfterEach
     void deleteUser() {
-        userDetailsService.deleteUser(userDetailsService.getUser(username));
+        UserDTO userDTO = new UserDTO(username, password);
+        userDetailsService.deleteUser(userDTO);
     }
 
     @Test
@@ -73,10 +79,10 @@ class UserControllerTest {
         HttpEntity<String> entity = new HttpEntity<>(userJson, headers);
 
         //when
-        ResponseEntity<String> exchange = restTemplate.exchange("http://localhost:" + port + "/register", HttpMethod.POST, entity, String.class);
+        ResponseEntity<DAOUser> exchange = restTemplate.exchange("http://localhost:" + port + "/register", HttpMethod.POST, entity, DAOUser.class);
 
         //then
-        assertThat(exchange.getBody()).isEqualTo("User created");
+        assertThat(exchange.getBody().getUsername()).isEqualTo(username);
     }
 
     @Test
@@ -103,9 +109,9 @@ class UserControllerTest {
         HttpEntity<String> entity = new HttpEntity<>(userJson, headers);
 
         //when
-        ResponseEntity<String> exchange = restTemplate.exchange("http://localhost:" + port + "/register", HttpMethod.POST, entity, String.class);
+        ResponseEntity<DAOUser> exchange = restTemplate.exchange("http://localhost:" + port + "/register", HttpMethod.POST, entity, DAOUser.class);
 
         //then
-        assertThat(exchange.getBody()).isEqualTo("User already exists");
+        assertThat(exchange.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 }

@@ -42,8 +42,9 @@ public class JwtUserDetailsService implements UserDetailsService {
         return userDao.save(newUser);
     }
 
-    public void deleteUser(DAOUser user) {
-        userDao.delete(user);
+    public void deleteUser(UserDTO userdto) {
+        DAOUser existingUser = userDao.findByUsername(userdto.getUsername());
+        userDao.delete(existingUser);
     }
 
     public DAOUser getUser(String userName) {

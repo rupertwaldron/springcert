@@ -4,6 +4,7 @@ import com.ruppyrup.springcert.exceptions.ExistingUserException;
 import com.ruppyrup.springcert.jwt.JwtRequest;
 import com.ruppyrup.springcert.jwt.JwtResponse;
 import com.ruppyrup.springcert.jwt.JwtTokenUtil;
+import com.ruppyrup.springcert.model.DAOUser;
 import com.ruppyrup.springcert.model.UserDTO;
 import com.ruppyrup.springcert.service.impl.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
@@ -42,17 +40,22 @@ public class JwtAuthenticationController {
     }
 
     @PostMapping(value = "/register")
-    public ResponseEntity<String> saveUser(@RequestBody UserDTO user) {
+    public ResponseEntity<DAOUser> saveUser(@RequestBody UserDTO user) {
+        DAOUser createdUser = null;
+        HttpStatus status = HttpStatus.CREATED;
         try {
-            userDetailsService.save(user);
-            return ResponseEntity
-                    .ok()
-                    .body("User created");
+            createdUser = userDetailsService.save(user);
         } catch (ExistingUserException e) {
-            return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body(e.getMessage());
+            status = HttpStatus.FORBIDDEN;
         }
+       return ResponseEntity
+               .status(status)
+               .body(createdUser);
+    }
+
+    @DeleteMapping(value = "/users")
+    public void deleteUser(@RequestBody UserDTO userDTO) {
+            userDetailsService.deleteUser(userDTO);
     }
 
     private void authenticate(String username, String password) throws Exception {
