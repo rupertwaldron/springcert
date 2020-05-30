@@ -4,6 +4,8 @@ import com.ruppyrup.springcert.dao.UserDao;
 import com.ruppyrup.springcert.exceptions.ExistingUserException;
 import com.ruppyrup.springcert.model.DAOUser;
 import com.ruppyrup.springcert.model.UserDTO;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,16 +14,28 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
+
+    private Counter userCount;
 
     @Autowired
     private UserDao userDao;
 
     @Autowired
     private PasswordEncoder bcryptEncoder;
+
+    public JwtUserDetailsService(MeterRegistry meterRegistry) {
+        userCount = meterRegistry.counter("storage.user.count", "type", "user");
+    }
+
+    @PostConstruct
+    public void countUsers() {
+        userDao.findAll().forEach(cred -> userCount.increment());
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -39,12 +53,14 @@ public class JwtUserDetailsService implements UserDetailsService {
         DAOUser newUser = new DAOUser();
         newUser.setUsername(user.getUsername());
         newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
+        userCount.increment();
         return userDao.save(newUser);
     }
 
     public void deleteUser(UserDTO userdto) {
         DAOUser existingUser = userDao.findByUsername(userdto.getUsername());
         userDao.delete(existingUser);
+        userCount.increment(-1);
     }
 
     public DAOUser getUser(String userName) {
