@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {userPostFetch} from '../redux/actions';
+import {userPostFetch} from './actions';
 
-class Signup extends Component {
+class Register extends Component {
     state = {
         username: "",
         password: ""
@@ -51,4 +51,4 @@ const mapDispatchToProps = dispatch => ({
     userPostFetch: userInfo => dispatch(userPostFetch(userInfo))
 })
 
-export default connect(null, mapDispatchToProps)(Signup);
+export default connect(null, mapDispatchToProps)(Register);
