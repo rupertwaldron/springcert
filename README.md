@@ -7,3 +7,4 @@ CICD Test Project
 2) Username and password should be encrypted on the db
 3) Need a way of masking and unmasking data on UI
 4) Option to copy unmasked decrypted data from UI without displaying the data to the screen
+5) Change to mvcMatchers from antMatchers in WebSecurityConfig
