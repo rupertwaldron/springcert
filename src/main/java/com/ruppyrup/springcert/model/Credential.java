@@ -31,8 +31,9 @@ public class Credential {
     @Column
     private String password;
 
-    @Column
-    private String user;
+    @ManyToOne
+    @JoinColumn
+    private DAOUser user;
 
     public Credential() {
     }
@@ -44,7 +45,7 @@ public class Credential {
         this.password = credentialDTO.getPassword();
     }
 
-    public Credential(Long id, String uuid, String credentialName, String url, String login, String password, String user) {
+    public Credential(Long id, String uuid, String credentialName, String url, String login, String password, DAOUser user) {
         this.id = id;
         this.uuid = uuid;
         this.credentialName = credentialName;
@@ -103,11 +104,11 @@ public class Credential {
         this.password = password;
     }
 
-    public String getUser() {
+    public DAOUser getUser() {
         return user;
     }
 
-    public void setUser(String user) {
+    public void setUser(DAOUser user) {
         this.user = user;
     }
 }

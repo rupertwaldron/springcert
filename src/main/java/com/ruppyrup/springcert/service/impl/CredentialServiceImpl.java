@@ -6,6 +6,7 @@ import com.ruppyrup.springcert.exceptions.RequestMadeByNonOwner;
 import com.ruppyrup.springcert.jwt.JwtContextManager;
 import com.ruppyrup.springcert.model.Credential;
 import com.ruppyrup.springcert.model.CredentialDTO;
+import com.ruppyrup.springcert.model.DAOUser;
 import com.ruppyrup.springcert.service.CredentialService;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -26,6 +27,9 @@ public class CredentialServiceImpl implements CredentialService {
     @Autowired
     JwtContextManager jwtContextManager;
 
+    @Autowired
+    JwtUserDetailsService userService;
+
     public CredentialServiceImpl(MeterRegistry meterRegistry) {
         credentialCount = meterRegistry.counter("storage.credential.count", "type", "credential");
     }
@@ -37,7 +41,8 @@ public class CredentialServiceImpl implements CredentialService {
 
     @Override
     public List<Credential> getAllCredentials() {
-        return credentialDao.findAllByUser(jwtContextManager.getAuthorizedUser());
+        DAOUser authorizedUser = userService.getUser(jwtContextManager.getAuthorizedUser());
+        return credentialDao.findAllByUser(authorizedUser);
     }
 
     @Override
@@ -48,8 +53,9 @@ public class CredentialServiceImpl implements CredentialService {
 
     @Override
     public Credential createCredential(CredentialDTO credentialDto) {
+        DAOUser authorizedUser = userService.getUser(jwtContextManager.getAuthorizedUser());
         Credential credential = new Credential(credentialDto);
-        credential.setUser(jwtContextManager.getAuthorizedUser());
+        credential.setUser(authorizedUser);
         credentialCount.increment();
         return credentialDao.save(credential);
     }
