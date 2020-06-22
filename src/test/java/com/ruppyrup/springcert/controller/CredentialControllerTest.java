@@ -9,6 +9,7 @@ import com.ruppyrup.springcert.exceptions.ExistingUserException;
 import com.ruppyrup.springcert.jwt.JwtTokenUtil;
 import com.ruppyrup.springcert.model.Credential;
 import com.ruppyrup.springcert.model.CredentialDTO;
+import com.ruppyrup.springcert.model.DAOUser;
 import com.ruppyrup.springcert.model.UserDTO;
 import com.ruppyrup.springcert.service.impl.JwtUserDetailsService;
 import org.junit.jupiter.api.AfterEach;
@@ -57,6 +58,8 @@ public class CredentialControllerTest {
     @Autowired
     private JwtUserDetailsService userDetailsService;
 
+    private DAOUser user1Dao;
+
     private String username = "test";
 
     private String password = "test";
@@ -78,20 +81,22 @@ public class CredentialControllerTest {
 
     @BeforeEach
     public void setup() throws ExistingUserException {
-        //creat credential and save
-        credential1 = new Credential(amazonUser1DTO);
-        credential1.setUuid("1234");
-        credential1.setUser(username);
-        credentialDao.save(credential1);
-        credential2 = new Credential(pondUser1DTO);
-        credential2.setUuid("abcd");
-        credential2.setUser(username);
-        credentialDao.save(credential2);
-
         // create user and save
         user.setUsername(username);
         user.setPassword(password);
         userDetailsService.save(user);
+        user1Dao = userDetailsService.getUser(username);
+        //creat credential and save
+        credential1 = new Credential(amazonUser1DTO);
+        credential1.setUuid("1234");
+        credential1.setUser(user1Dao);
+        credentialDao.save(credential1);
+        credential2 = new Credential(pondUser1DTO);
+        credential2.setUuid("abcd");
+        credential2.setUser(user1Dao);
+        credentialDao.save(credential2);
+
+
 
         //set jwtContext user and get token
         jwtContextManager.setUser(username);

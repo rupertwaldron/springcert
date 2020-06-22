@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface CredentialDao extends CrudRepository<Credential, Long> {
     List<Credential> findAllByUser(DAOUser user);
-    Optional<Credential> findByUuid(String uuid);
+    Optional<Credential> findByUuidAndUser(String uuid, DAOUser user);
 
-    Credential findByCredentialNameAndUser(String CredentialName, String user);
+    //Credential findByCredentialNameAndUser(String CredentialName, String user);
 }

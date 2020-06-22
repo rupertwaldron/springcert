@@ -2,7 +2,6 @@ package com.ruppyrup.springcert.service.impl;
 
 import com.ruppyrup.springcert.dao.CredentialDao;
 import com.ruppyrup.springcert.exceptions.CredentialNotFoundException;
-import com.ruppyrup.springcert.exceptions.RequestMadeByNonOwner;
 import com.ruppyrup.springcert.jwt.JwtContextManager;
 import com.ruppyrup.springcert.model.Credential;
 import com.ruppyrup.springcert.model.CredentialDTO;
@@ -46,7 +45,7 @@ public class CredentialServiceImpl implements CredentialService {
     }
 
     @Override
-    public Credential getCredential(String uuid) throws CredentialNotFoundException, RequestMadeByNonOwner {
+    public Credential getCredential(String uuid) throws CredentialNotFoundException {
         Credential foundCredential = getAuthorizedCredential(uuid);
         return foundCredential;
     }
@@ -61,7 +60,7 @@ public class CredentialServiceImpl implements CredentialService {
     }
 
     @Override
-    public Credential updateCredential(String uuid, CredentialDTO credentialDTO) throws CredentialNotFoundException, RequestMadeByNonOwner {
+    public Credential updateCredential(String uuid, CredentialDTO credentialDTO) throws CredentialNotFoundException {
         Credential credentialToUpdate = getAuthorizedCredential(uuid);
         credentialToUpdate.setUrl(credentialDTO.getUrl());
         credentialToUpdate.setLogin(credentialDTO.getLogin());
@@ -71,7 +70,7 @@ public class CredentialServiceImpl implements CredentialService {
     }
 
     @Override
-    public Credential deleteCredential(String uuid) throws CredentialNotFoundException, RequestMadeByNonOwner {
+    public Credential deleteCredential(String uuid) throws CredentialNotFoundException{
         Credential credentialToDelete = getAuthorizedCredential(uuid);
         if (credentialToDelete == null) return null;
         credentialDao.delete(credentialToDelete);
@@ -79,10 +78,9 @@ public class CredentialServiceImpl implements CredentialService {
         return credentialToDelete;
     }
 
-    private Credential getAuthorizedCredential(String uuid) throws CredentialNotFoundException, RequestMadeByNonOwner {
-        Credential credentialToUpdate = credentialDao.findByUuid(uuid).orElseThrow(CredentialNotFoundException::new);
-        if (!credentialToUpdate.getUser().equals(jwtContextManager.getAuthorizedUser()))
-            throw new RequestMadeByNonOwner();
-        return credentialToUpdate;
+    private Credential getAuthorizedCredential(String uuid) throws CredentialNotFoundException {
+        DAOUser authorizedUser = userService.getUser(jwtContextManager.getAuthorizedUser());
+        Credential credential = credentialDao.findByUuidAndUser(uuid, authorizedUser).orElseThrow(CredentialNotFoundException::new);
+        return credential;
     }
 }

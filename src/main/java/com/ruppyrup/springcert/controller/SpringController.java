@@ -1,7 +1,6 @@
 package com.ruppyrup.springcert.controller;
 
 import com.ruppyrup.springcert.exceptions.CredentialNotFoundException;
-import com.ruppyrup.springcert.exceptions.RequestMadeByNonOwner;
 import com.ruppyrup.springcert.model.Credential;
 import com.ruppyrup.springcert.model.CredentialDTO;
 import com.ruppyrup.springcert.service.CredentialService;
@@ -39,8 +38,6 @@ public class SpringController {
             credential = credentialService.getCredential(uuid);
         } catch (CredentialNotFoundException e) {
             status = HttpStatus.NOT_FOUND;
-        } catch (RequestMadeByNonOwner re) {
-            status = HttpStatus.UNAUTHORIZED;
         }
         return ResponseEntity
                 .status(status)
@@ -65,8 +62,6 @@ public class SpringController {
             updatedCredential = credentialService.updateCredential(uuid, credentialDTO);
         } catch (CredentialNotFoundException e) {
             status = HttpStatus.NOT_FOUND;
-        } catch (RequestMadeByNonOwner re) {
-            status = HttpStatus.UNAUTHORIZED;
         }
         return ResponseEntity
                 .status(status)
@@ -81,8 +76,6 @@ public class SpringController {
             deletedCredential = credentialService.deleteCredential(uuid);
         } catch (CredentialNotFoundException e) {
             status = HttpStatus.NOT_FOUND;
-        } catch (RequestMadeByNonOwner re) {
-            status = HttpStatus.UNAUTHORIZED;
         }
         return ResponseEntity
                 .status(status)

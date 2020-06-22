@@ -1,7 +1,5 @@
 package com.ruppyrup.springcert.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 
 @Entity
@@ -16,7 +14,7 @@ public class DAOUser {
     private String username;
 
     @Column
-    @JsonIgnore
+    //@JsonIgnore
     private String password;
 
     public DAOUser() {
