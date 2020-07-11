@@ -1,5 +1,6 @@
 package com.ruppyrup.springcert.model;
 
+import com.ruppyrup.springcert.encryption.Encrypt;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -11,10 +12,15 @@ public class CredentialDTO {
 
     @NotBlank(message = "credentialName can't be empty")
     private String credentialName;
+
     @NotBlank(message = "url can't be empty")
     private String url;
+
+    @Encrypt
     @NotBlank(message = "login can't be empty")
     private String login;
+
+    @Encrypt
     @NotBlank(message = "password can't be empty")
     private String password;
 

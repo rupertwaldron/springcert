@@ -1,5 +1,7 @@
 package com.ruppyrup.springcert.encryption;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Cipher;
@@ -7,9 +9,14 @@ import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
 
 @Service
-public class EncryptionService {
+@Qualifier("stringEncryption")
+public class StringEncryptionService implements IEncryptionService<String> {
 
-    public String encrypt(String data, String key) {
+    @Value("${encryption.key}")
+    private String key;
+
+    @Override
+    public String encrypt(String data) {
         try {
             byte[] keyData = key.getBytes();
             SecretKeySpec secretKeySpec = new SecretKeySpec(keyData, "Blowfish");
@@ -23,7 +30,8 @@ public class EncryptionService {
         }
     }
 
-    public String decrypt(String data, String key) {
+    @Override
+    public String decrypt(String data) {
         try {
             byte[] keyData = key.getBytes();
             SecretKeySpec secretKeySpec = new SecretKeySpec(keyData, "Blowfish");
