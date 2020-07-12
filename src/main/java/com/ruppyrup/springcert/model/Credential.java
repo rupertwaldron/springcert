@@ -1,5 +1,6 @@
 package com.ruppyrup.springcert.model;
 
+import com.ruppyrup.encryption.Encrypt;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -25,9 +26,11 @@ public class Credential {
     @Column
     private String url;
 
+    @Encrypt
     @Column
     private String login;
 
+    @Encrypt
     @Column
     private String password;
 

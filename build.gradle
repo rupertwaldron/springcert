@@ -27,6 +27,7 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 	implementation 'mysql:mysql-connector-java'
 	compile 'javax.xml.bind:jaxb-api:2.3.1'
+	compile files('libs/Encryption.jar')
 	compileOnly 'org.projectlombok:lombok:1.18.12'
 	annotationProcessor 'org.projectlombok:lombok:1.18.12'
 	testImplementation 'org.hsqldb:hsqldb'

@@ -1,19 +1,15 @@
 package com.ruppyrup.springcert.encryption;
 
+import com.ruppyrup.encryption.GenericEncryptionService;
+import com.ruppyrup.encryption.IEncryptionService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class EncryptionTest {
 
-    @Autowired
-    @Qualifier("stringEncryption")
-    IEncryptionService<String> encryptionService;
+    IEncryptionService<String> encryptionService = new GenericEncryptionService<>("secrete", "Blowfish");
 
     @Test
     void encryptionAndThenDecryptionShouldReturnSameString() throws IllegalAccessException, NoSuchFieldException {

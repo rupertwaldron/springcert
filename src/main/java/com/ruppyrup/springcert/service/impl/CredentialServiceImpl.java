@@ -1,5 +1,7 @@
 package com.ruppyrup.springcert.service.impl;
 
+import com.ruppyrup.encryption.GenericEncryptionService;
+import com.ruppyrup.encryption.IEncryptionService;
 import com.ruppyrup.springcert.dao.CredentialDao;
 import com.ruppyrup.springcert.exceptions.CredentialNotFoundException;
 import com.ruppyrup.springcert.jwt.JwtContextManager;
@@ -10,15 +12,23 @@ import com.ruppyrup.springcert.service.CredentialService;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CredentialServiceImpl implements CredentialService {
 
     private Counter credentialCount;
+
+    @Value("${encryption.key}")
+    private String encryptionKey;
+
+    private IEncryptionService<CredentialDTO> dtoEncryptionService = new GenericEncryptionService<>(encryptionKey, "Blowfish");
+    private IEncryptionService<Credential> encryptionService = new GenericEncryptionService<>(encryptionKey, "Blowfish");
 
     @Autowired
     CredentialDao credentialDao;
@@ -41,13 +51,15 @@ public class CredentialServiceImpl implements CredentialService {
     @Override
     public List<Credential> getAllCredentials() {
         DAOUser authorizedUser = userService.getUser(jwtContextManager.getAuthorizedUser());
-        return credentialDao.findAllByUser(authorizedUser);
+        return credentialDao.findAllByUser(authorizedUser).stream()
+                .map(credential -> encryptionService.decrypt(credential))
+                .collect(Collectors.toList());
     }
 
     @Override
     public Credential getCredential(String uuid) throws CredentialNotFoundException {
         Credential foundCredential = getAuthorizedCredential(uuid);
-        return foundCredential;
+        return encryptionService.decrypt(foundCredential);
     }
 
     @Override
@@ -56,17 +68,17 @@ public class CredentialServiceImpl implements CredentialService {
         Credential credential = new Credential(credentialDto);
         credential.setUser(authorizedUser);
         credentialCount.increment();
-        return credentialDao.save(credential);
+        return credentialDao.save(encryptionService.encrypt(credential));
     }
 
     @Override
     public Credential updateCredential(String uuid, CredentialDTO credentialDTO) throws CredentialNotFoundException {
-        Credential credentialToUpdate = getAuthorizedCredential(uuid);
+        Credential credentialToUpdate = encryptionService.decrypt(getAuthorizedCredential(uuid));
         credentialToUpdate.setUrl(credentialDTO.getUrl());
         credentialToUpdate.setLogin(credentialDTO.getLogin());
         credentialToUpdate.setCredentialName(credentialDTO.getCredentialName());
         credentialToUpdate.setPassword(credentialDTO.getPassword());
-        return credentialDao.save(credentialToUpdate);
+        return credentialDao.save(encryptionService.encrypt(credentialToUpdate));
     }
 
     @Override
