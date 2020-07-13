@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ruppyrup.springcert.config.JwtContextManagerTestImpl;
 import com.ruppyrup.springcert.dao.CredentialDao;
 import com.ruppyrup.springcert.dao.UserDao;
+import com.ruppyrup.springcert.encryption.IEncryptionService;
 import com.ruppyrup.springcert.exceptions.ExistingUserException;
 import com.ruppyrup.springcert.jwt.JwtTokenUtil;
 import com.ruppyrup.springcert.model.Credential;
@@ -58,6 +59,9 @@ public class CredentialControllerTest {
     @Autowired
     private JwtUserDetailsService userDetailsService;
 
+    @Autowired
+    IEncryptionService<Credential> encryptionService;
+
     private DAOUser user1Dao;
 
     private String username = "test";
@@ -90,10 +94,12 @@ public class CredentialControllerTest {
         credential1 = new Credential(amazonUser1DTO);
         credential1.setUuid("1234");
         credential1.setUser(user1Dao);
+        credential1 = encryptionService.encrypt(credential1);
         credentialDao.save(credential1);
         credential2 = new Credential(pondUser1DTO);
         credential2.setUuid("abcd");
         credential2.setUser(user1Dao);
+        credential2 = encryptionService.encrypt(credential2);
         credentialDao.save(credential2);
 
 
@@ -134,7 +140,7 @@ public class CredentialControllerTest {
 
         //then
         assertThat(exchange.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(exchange.getBody()).isEqualTo(credential1);
+        assertThat(exchange.getBody()).isEqualTo(encryptionService.decrypt(credential1));
     }
 
     @Test
@@ -153,7 +159,7 @@ public class CredentialControllerTest {
 
         //then
         assertThat(exchange.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(exchange.getBody()).containsExactlyInAnyOrder(credential1, credential2);
+        assertThat(exchange.getBody()).containsExactlyInAnyOrder(encryptionService.decrypt(credential1), encryptionService.decrypt(credential2));
     }
 
 
@@ -175,7 +181,7 @@ public class CredentialControllerTest {
 
         //then
         assertThat(exchange.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(new CredentialDTO(exchange.getBody())).isEqualTo(credentialDTO);
+        assertThat(new CredentialDTO(exchange.getBody())).isEqualToIgnoringGivenFields(credentialDTO, "login", "password");
     }
 
     @Test
@@ -196,7 +202,7 @@ public class CredentialControllerTest {
 
         //then
         assertThat(exchange.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(new CredentialDTO(exchange.getBody())).isEqualTo(credentialDTO);
+        assertThat(new CredentialDTO(exchange.getBody())).isEqualToIgnoringGivenFields(credentialDTO, "login", "password");
     }
 
     @Test

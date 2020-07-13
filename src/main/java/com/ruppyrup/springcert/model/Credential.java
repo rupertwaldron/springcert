@@ -1,6 +1,6 @@
 package com.ruppyrup.springcert.model;
 
-import com.ruppyrup.encryption.Encrypt;
+import com.ruppyrup.springcert.encryption.Encrypt;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 

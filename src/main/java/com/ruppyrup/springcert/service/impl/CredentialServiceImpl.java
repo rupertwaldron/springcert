@@ -1,8 +1,7 @@
 package com.ruppyrup.springcert.service.impl;
 
-import com.ruppyrup.encryption.GenericEncryptionService;
-import com.ruppyrup.encryption.IEncryptionService;
 import com.ruppyrup.springcert.dao.CredentialDao;
+import com.ruppyrup.springcert.encryption.IEncryptionService;
 import com.ruppyrup.springcert.exceptions.CredentialNotFoundException;
 import com.ruppyrup.springcert.jwt.JwtContextManager;
 import com.ruppyrup.springcert.model.Credential;
@@ -12,7 +11,6 @@ import com.ruppyrup.springcert.service.CredentialService;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -24,11 +22,8 @@ public class CredentialServiceImpl implements CredentialService {
 
     private Counter credentialCount;
 
-    @Value("${encryption.key}")
-    private String encryptionKey;
-
-    private IEncryptionService<CredentialDTO> dtoEncryptionService = new GenericEncryptionService<>(encryptionKey, "Blowfish");
-    private IEncryptionService<Credential> encryptionService = new GenericEncryptionService<>(encryptionKey, "Blowfish");
+    @Autowired
+    private IEncryptionService<Credential> encryptionService;
 
     @Autowired
     CredentialDao credentialDao;
@@ -51,7 +46,8 @@ public class CredentialServiceImpl implements CredentialService {
     @Override
     public List<Credential> getAllCredentials() {
         DAOUser authorizedUser = userService.getUser(jwtContextManager.getAuthorizedUser());
-        return credentialDao.findAllByUser(authorizedUser).stream()
+        List<Credential> allByUser = credentialDao.findAllByUser(authorizedUser);
+        return allByUser.stream()
                 .map(credential -> encryptionService.decrypt(credential))
                 .collect(Collectors.toList());
     }
@@ -82,7 +78,7 @@ public class CredentialServiceImpl implements CredentialService {
     }
 
     @Override
-    public Credential deleteCredential(String uuid) throws CredentialNotFoundException{
+    public Credential deleteCredential(String uuid) throws CredentialNotFoundException {
         Credential credentialToDelete = getAuthorizedCredential(uuid);
         if (credentialToDelete == null) return null;
         credentialDao.delete(credentialToDelete);

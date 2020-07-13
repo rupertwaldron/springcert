@@ -1,16 +1,17 @@
 package com.ruppyrup.springcert.encryption;
 
-import com.ruppyrup.encryption.GenericEncryptionService;
-import com.ruppyrup.encryption.IEncryptionService;
 import com.ruppyrup.springcert.model.Credential;
 import com.ruppyrup.springcert.model.CredentialDTO;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class GenericEncryptionServiceTest {
-    IEncryptionService<Credential> genericEncryptionService = new GenericEncryptionService<>("secrete", "Blowfish");;
+
+    @Autowired
+    IEncryptionService<Credential> genericEncryptionService;
 
     CredentialDTO credentialDTO1 = new CredentialDTO("Amazon", "www.amazon.com", "ruppyrup", "monkey");
     CredentialDTO credentialDTO2 = new CredentialDTO("Amazon", "www.amazon.com", "ruppyrup", "monkey");

@@ -2,6 +2,7 @@ package com.ruppyrup.springcert.service.impl;
 
 import com.ruppyrup.springcert.config.JwtContextManagerTestImpl;
 import com.ruppyrup.springcert.dao.CredentialDao;
+import com.ruppyrup.springcert.encryption.IEncryptionService;
 import com.ruppyrup.springcert.exceptions.CredentialNotFoundException;
 import com.ruppyrup.springcert.exceptions.ExistingUserException;
 import com.ruppyrup.springcert.exceptions.RequestMadeByNonOwner;
@@ -60,6 +61,9 @@ class CredentialServiceImplTest {
     @Autowired
     private JwtUserDetailsService userDetailsService;
 
+    @Autowired
+    IEncryptionService<Credential> encryptionService;
+
     @BeforeEach
     void setUp() throws ExistingUserException {
         userDetailsService.save(user1);
@@ -100,10 +104,10 @@ class CredentialServiceImplTest {
     @Test
     void getCredential() throws Exception {
         jwtContextManager.setUser(user1.getUsername());
-        assertThat(credentialService.getCredential(amazonUser1.getUuid())).isEqualTo(amazonUser1);
+        assertThat(credentialService.getCredential(amazonUser1.getUuid())).isEqualTo(encryptionService.decrypt(amazonUser1));
 
         jwtContextManager.setUser(user2.getUsername());
-        assertThat(credentialService.getCredential(amazonUser2.getUuid())).isEqualTo(amazonUser2);
+        assertThat(credentialService.getCredential(amazonUser2.getUuid())).isEqualTo(encryptionService.decrypt(amazonUser2));
     }
 
     @Test
@@ -129,7 +133,7 @@ class CredentialServiceImplTest {
         Credential updated1 = credentialService.updateCredential(pondUser1.getUuid(), pp2User1DTO);
 
         //then
-        assertThat(new CredentialDTO(updated1)).isEqualTo(pp2User1DTO);
+        assertThat(new CredentialDTO(encryptionService.decrypt(updated1))).isEqualTo(pp2User1DTO);
     }
 
     @Test
