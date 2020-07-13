@@ -12,7 +12,7 @@ class EncryptionTest {
     IEncryptionService<String> encryptionService;
 
     @Test
-    void encryptionAndThenDecryptionShouldReturnSameString() throws IllegalAccessException, NoSuchFieldException {
+    void encryptionAndThenDecryptionShouldReturnSameString() {
         String data = "this is the secrete";
 
         String encryptedData = encryptionService.encrypt(data);

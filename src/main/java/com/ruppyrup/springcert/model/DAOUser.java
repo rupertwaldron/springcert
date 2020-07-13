@@ -1,7 +1,14 @@
 package com.ruppyrup.springcert.model;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Getter
+@Setter
 @Entity
 @Table(name = "users")
 public class DAOUser {
@@ -11,10 +18,11 @@ public class DAOUser {
     private long id;
 
     @Column
+    @EqualsAndHashCode.Include
     private String username;
 
     @Column
-    //@JsonIgnore
+    @EqualsAndHashCode.Include
     private String password;
 
     public DAOUser() {
@@ -28,47 +36,5 @@ public class DAOUser {
     public DAOUser(String username, String password) {
         this.username = username;
         this.password = password;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        DAOUser daoUser = (DAOUser) o;
-
-        if (username != null ? !username.equals(daoUser.username) : daoUser.username != null) return false;
-        return password != null ? password.equals(daoUser.password) : daoUser.password == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = username != null ? username.hashCode() : 0;
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        return result;
     }
 }
