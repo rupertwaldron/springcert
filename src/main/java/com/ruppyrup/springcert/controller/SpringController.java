@@ -12,27 +12,24 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-
+@CrossOrigin
 @RestController
 public class SpringController {
 
     @Autowired
     CredentialService credentialService;
 
-    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/credentials")
     public ResponseEntity<List<Credential>> getAllCredentials() {
         return new ResponseEntity<>(credentialService.getAllCredentials(), HttpStatus.OK);
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/hello")
     @ResponseBody
     public String sayHello() {
         return "Hello from credentials";
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/credentials/{uuid}")
     public ResponseEntity<Credential> findCredential(@PathVariable String uuid) {
         HttpStatus status = HttpStatus.OK;
@@ -47,7 +44,6 @@ public class SpringController {
                 .body(credential);
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/credentials")
     public ResponseEntity<Credential> createCredential(@RequestBody @Valid CredentialDTO credentialDTO) {
         Credential createdCredential = credentialService.createCredential(credentialDTO);
@@ -58,7 +54,6 @@ public class SpringController {
                 .body(createdCredential);
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
     @PutMapping("/credentials/{uuid}")
     public ResponseEntity<Credential> updateCredential(@PathVariable String uuid, @RequestBody CredentialDTO credentialDTO) {
         HttpStatus status = HttpStatus.OK;
@@ -73,7 +68,6 @@ public class SpringController {
                 .body(updatedCredential);
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
     @DeleteMapping("/credentials/{uuid}")
     public ResponseEntity<Credential>  deleteCredential(@PathVariable String uuid) {
         HttpStatus status = HttpStatus.OK;

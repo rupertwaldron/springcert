@@ -30,7 +30,6 @@ public class JwtAuthenticationController {
     @Autowired
     private JwtUserDetailsService userDetailsService;
 
-    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping(value = "/authenticate")
     public ResponseEntity<JwtResponse> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
@@ -40,7 +39,6 @@ public class JwtAuthenticationController {
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping(value = "/register")
     public ResponseEntity<DAOUser> saveUser(@RequestBody UserDTO user) {
         DAOUser createdUser = null;
@@ -55,7 +53,6 @@ public class JwtAuthenticationController {
                .body(createdUser);
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
     @DeleteMapping(value = "/users")
     public void deleteUser(@RequestBody UserDTO userDTO) {
             userDetailsService.deleteUser(userDTO);
