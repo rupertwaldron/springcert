@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 
+// this is used by authenticate method to authenticate the user
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
 
@@ -37,7 +38,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         userDao.findAll().forEach(cred -> userCount.increment());
     }
 
-    @Override
+    @Override //this method is used my authenticate in the
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         DAOUser user = userDao.findByUsername(username);
         if (user == null) {
