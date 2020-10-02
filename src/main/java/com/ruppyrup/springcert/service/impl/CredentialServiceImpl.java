@@ -1,7 +1,7 @@
 package com.ruppyrup.springcert.service.impl;
 
+import com.ruppyrup.encryption.IEncryptionService;
 import com.ruppyrup.springcert.dao.CredentialDao;
-import com.ruppyrup.springcert.encryption.IEncryptionService;
 import com.ruppyrup.springcert.exceptions.CredentialNotFoundException;
 import com.ruppyrup.springcert.jwt.JwtContextManager;
 import com.ruppyrup.springcert.model.Credential;

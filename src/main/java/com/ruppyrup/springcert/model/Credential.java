@@ -1,6 +1,6 @@
 package com.ruppyrup.springcert.model;
 
-import com.ruppyrup.springcert.encryption.Encrypt;
+import com.ruppyrup.encryption.Encrypt;
 import lombok.Data;
 
 import javax.persistence.*;
